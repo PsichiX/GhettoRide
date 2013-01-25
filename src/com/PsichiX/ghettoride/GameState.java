@@ -7,6 +7,7 @@ import com.PsichiX.XenonCoreDroid.Framework.Graphics.*;
 import com.PsichiX.XenonCoreDroid.Framework.Actors.*;
 import com.PsichiX.XenonCoreDroid.XeSense.EventData;
 import com.PsichiX.XenonCoreDroid.XeUtils.*;
+import com.PsichiX.XenonCoreDroid.XeSense;
 
 public class GameState extends State implements CommandQueue.Delegate
 {
@@ -54,6 +55,7 @@ public class GameState extends State implements CommandQueue.Delegate
 		float dt = getApplication().getTimer().getDeltaTime() * 0.001f;
 		//float dt = 1.0f / 30.0f;
 		
+		getApplication().getPhoton().clearDrawCalls();
 		_cmds.run();
 		_actors.onUpdate(dt);
 		_scn.sort(_sorter);
