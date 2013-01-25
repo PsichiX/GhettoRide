@@ -16,6 +16,9 @@ public class GameState extends State implements CommandQueue.Delegate
 	private ShapeComparator.DescZ _sorter = new ShapeComparator.DescZ();
 	private ActorsManager _actors = new ActorsManager();
 	private CommandQueue _cmds = new CommandQueue();
+	private Sprite _bg;
+	private Sprite _parallax[] = new Sprite[2];
+	private SpriteSheet _bgSheet;
 	
 	@Override
 	public void onEnter()
@@ -25,8 +28,11 @@ public class GameState extends State implements CommandQueue.Delegate
 		_scn = (Scene)getApplication().getAssets().get(R.raw.scene, Scene.class);
 		_cam = (Camera2D)_scn.getCamera();
 		
-		Material mat = (Material)getApplication().getAssets().get(R.raw.ship_material, Material.class);
-		_actors.attach(new Player(mat));
+		_bgSheet = (SpriteSheet)getApplication().getAssets().get(R.raw.background_sheet, SpriteSheet.class);
+		_bg = new Sprite(null); 
+		_bgSheet.getSubImage("bg").apply(_bg);
+		_bg.setOffsetFromSize(0.5f, 0.5f);
+		_scn.attach(_bg);
 	}
 	
 	@Override
@@ -58,6 +64,7 @@ public class GameState extends State implements CommandQueue.Delegate
 		getApplication().getPhoton().clearDrawCalls();
 		_cmds.run();
 		_actors.onUpdate(dt);
+		_bg.setPosition(_cam.getViewPositionX(), _cam.getViewPositionY());
 		_scn.sort(_sorter);
 		_scn.update(dt);
 	}

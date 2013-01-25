@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:1bbe32ad01cffca3b9abdeec36000532$ -->
+<TextureAtlas imagePath="drawable/background_sheet" materialPath="raw/background_material">
+    <SubTexture name="bg" x="2" y="2" width="800" height="480"/>
+    <SubTexture name="crane1" x="804" y="2" width="566" height="600" frameX="-16" frameY="0" frameWidth="600" frameHeight="600"/>
+    <SubTexture name="crane2" x="1372" y="2" width="382" height="586" frameX="-24" frameY="-14" frameWidth="600" frameHeight="600"/>
+    <SubTexture name="crane3" x="2" y="604" width="436" height="598" frameX="-91" frameY="-2" frameWidth="600" frameHeight="600"/>
+    <SubTexture name="crane4" x="440" y="604" width="578" height="410" frameX="-17" frameY="-190" frameWidth="600" frameHeight="600"/>
+    <SubTexture name="crane5" x="1020" y="604" width="502" height="432" frameX="-56" frameY="-168" frameWidth="600" frameHeight="600"/>
+    <SubTexture name="crane6" x="2" y="1204" width="598" height="404" frameX="-2" frameY="-196" frameWidth="600" frameHeight="600"/>
+</TextureAtlas>
