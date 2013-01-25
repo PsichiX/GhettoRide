@@ -28,6 +28,7 @@ public final class R {
         public static final int camera=0x7f040002;
         public static final int color_shader=0x7f040003;
         public static final int scene=0x7f040004;
+        public static final int ship_material=0x7f040005;
     }
     public static final class string {
         public static final int app_name=0x7f050000;

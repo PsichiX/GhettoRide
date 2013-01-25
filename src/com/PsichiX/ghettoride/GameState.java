@@ -1,8 +1,11 @@
 package com.PsichiX.ghettoride;
 
+import android.util.Log;
+
 import com.PsichiX.XenonCoreDroid.XeApplication.*;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.*;
 import com.PsichiX.XenonCoreDroid.Framework.Actors.*;
+import com.PsichiX.XenonCoreDroid.XeSense.EventData;
 import com.PsichiX.XenonCoreDroid.XeUtils.*;
 
 public class GameState extends State implements CommandQueue.Delegate
@@ -20,6 +23,9 @@ public class GameState extends State implements CommandQueue.Delegate
 		
 		_scn = (Scene)getApplication().getAssets().get(R.raw.scene, Scene.class);
 		_cam = (Camera2D)_scn.getCamera();
+		
+		Material mat = (Material)getApplication().getAssets().get(R.raw.ship_material, Material.class);
+		_actors.attach(new Player(mat));
 	}
 	
 	@Override
@@ -36,8 +42,15 @@ public class GameState extends State implements CommandQueue.Delegate
 	}
 	
 	@Override
+	public void onSensor(EventData ev) {
+		_actors.onSensor(ev);
+	}
+	
+	@Override
 	public void onUpdate()
 	{
+		getApplication().getSense().setCoordsOrientation(-1);
+		
 		float dt = getApplication().getTimer().getDeltaTime() * 0.001f;
 		//float dt = 1.0f / 30.0f;
 		
