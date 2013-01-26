@@ -5,10 +5,17 @@ import com.PsichiX.XenonCoreDroid.Framework.Graphics.*;
 import com.PsichiX.XenonCoreDroid.Framework.Actors.*;
 import com.PsichiX.XenonCoreDroid.XeSense.EventData;
 import com.PsichiX.XenonCoreDroid.XeUtils.*;
+import com.PsichiX.ghettoride.gui.SyringeBackgroundGui;
+import com.PsichiX.ghettoride.gui.SyringeFrontGui;
 import com.PsichiX.ghettoride.physics.CollisionManager;
 
 public class GameState extends State implements CommandQueue.Delegate
 {
+	///private Camera2D _camGui;
+	//private Scene _scnGui;
+	private SyringeFrontGui _syringeFront;
+	private SyringeBackgroundGui _syringeBackground;
+	
 	private Camera2D _cam;
 	private Scene _scn;
 	private ShapeComparator.DescZ _sorter = new ShapeComparator.DescZ();
@@ -29,6 +36,9 @@ public class GameState extends State implements CommandQueue.Delegate
 		
 		_scn = (Scene)getApplication().getAssets().get(R.raw.scene, Scene.class);
 		_cam = (Camera2D)_scn.getCamera();
+		
+		//_scnGui = (Scene)getApplication().getAssets().get(R.raw.scene_gui, Scene.class);
+		//_camGui = (Camera2D)_scnGui.getCamera();
 		
 		_animSheet = (SpriteSheet)getApplication().getAssets().get(R.raw.animations_sheet, SpriteSheet.class);
 		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("player")));
@@ -55,19 +65,10 @@ public class GameState extends State implements CommandQueue.Delegate
 		_player.setAnimation(_playerAnim);
 		_player.onAttach(_collmgr);
 		_player.setPosition(0, 0, -1);
-
-		/*
-		Platform box = new Platform(getApplication().getAssets());
-		box.onAttach(_collmgr);
-		box.setPosition(20, -50);
-		*/
-		//Platform[] list = new Platform[10];
+		
 		for(int i=0; i<5; i++) {
 			Platform tmp = new Platform(getApplication().getAssets());
-			//tmp.onAttach(_collmgr);
 			_collmgr.attach(tmp);
-			//tmp.setPosition(i*tmp.getWidth()*2, -50);
-			//tmp.calculateStartPos();
 			_actors.attach(tmp);
 			_scn.attach(tmp);
 			tmp.calculate();
@@ -94,7 +95,13 @@ public class GameState extends State implements CommandQueue.Delegate
 		_scn.attach(floor1);
 		_scn.attach(floor2);
 		
-		//box.calculate();
+		_syringeBackground = new SyringeBackgroundGui(getApplication().getAssets());
+		_syringeBackground.setPosition(_cam.getViewPositionX(), -_cam.getViewHeight()*0.4f, -1f);
+		_scn.attach(_syringeBackground);
+		
+		_syringeFront = new SyringeFrontGui(getApplication().getAssets());
+		_syringeFront.setPosition(_cam.getViewPositionX(), -_cam.getViewHeight()*0.4f, -1f);
+		_scn.attach(_syringeFront);
 		
 		getApplication().getTimer().reset();
 	}
@@ -140,12 +147,24 @@ public class GameState extends State implements CommandQueue.Delegate
 		_parallaxBg.setPosition(_cam.getViewPositionX(), _cam.getViewPositionY());
 		_parallaxBg.setSize(_cam.getViewWidth(), _cam.getViewHeight());
 		_parallaxBg.setOffsetFromSize(0.5f, 0.5f);
+		
+		updataGUI();
+		
 		_scn.sort(_sorter);
 		_scn.update(dt);
+		
+		//_scnGui.update(dt);
 	}
 	
 	public void onCommand(Object sender, String cmd, Object data)
 	{
 		
+	}
+	
+	private void updataGUI() {
+		_syringeBackground.setPosition(_cam.getViewPositionX(), _cam.getViewPositionY()-_cam.getViewHeight()*0.4f);
+		
+		_syringeFront.setPosition(_cam.getViewPositionX(), _cam.getViewPositionY()-_cam.getViewHeight()*0.4f);
+		_syringeFront.setSize(_player.getNormPlayerSpeed());
 	}
 }

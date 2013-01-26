@@ -15,6 +15,7 @@ import com.PsichiX.XenonCoreDroid.XeSense.EventData;
 import com.PsichiX.ghettoride.physics.AdrenalinTabs;
 import com.PsichiX.ghettoride.physics.CollisionManager;
 import com.PsichiX.ghettoride.physics.ICollidable;
+import com.PsichiX.ghettoride.physics.Obstacle;
 
 public class Player extends ActorSprite implements ICollidable {
 	private CollisionManager collisionManager;
@@ -23,13 +24,16 @@ public class Player extends ActorSprite implements ICollidable {
 	private float _histPosY = 0f;
 	private float _posX = 0.0f;
 	private float _posY = 0.0f;
-	private float _spdX = 250f;//100.0f;
-	private float _spdY = -10f;//100.0f;
+	
+	private float MAX_SPEED_X = 1000f;
+	private float MIN_SPEED_Y = 50f;
+	private float _spdX = 500f;
+	private float _spdY = -50f;
 	private FramesSequence.Animator _animator;
 	
 	private float lastY = 0f;
 	
-	private boolean isOnGround = false;// true;
+	private boolean isOnGround = false;
 	private boolean isRollin = false;
 	
 	private float floorTop = 0f;
@@ -133,16 +137,13 @@ public class Player extends ActorSprite implements ICollidable {
 		if(!isOnGround) {
 			flying(dt);
 		}
-		/*
-		if(isRollin) {
-			rolling(dt);
-		}*/
 		
 		setPosition(_posX, _posY);
 		
 		isOnGround = false;
 		
 		_animator.update(dt, 1.0f);
+		addSpeed(-dt*0.01f*MAX_SPEED_X);
 	}
 	
 	private void jump() {
@@ -181,7 +182,7 @@ public class Player extends ActorSprite implements ICollidable {
 	private void touchGround(float groundPosY) {
 		_posY = groundPosY;
 		isOnGround = true;
-		_spdY = -10f;
+		_spdY = -50f;
 		
 		setPosition(_posX, _posY);
 	}
@@ -241,6 +242,22 @@ public class Player extends ActorSprite implements ICollidable {
 			}
 		} else if(o instanceof AdrenalinTabs) {
 			getManager().detach((IActor) o);
-		}
+			addSpeed(0.1f*MAX_SPEED_X);
+		} else if(o instanceof Obstacle) {
+			if(((Obstacle)o).inactiv())
+				addSpeed(-0.1f*MAX_SPEED_X);
+		} 
+	}
+	
+	private void addSpeed(float deltaSpeed) {
+		_spdX += deltaSpeed;
+		if(_spdX < MIN_SPEED_Y)
+			_spdX = MIN_SPEED_Y;
+		if(_spdX > MAX_SPEED_X)
+			_spdX = MAX_SPEED_X;
+	}
+	
+	public float getNormPlayerSpeed() {
+		return _spdX/MAX_SPEED_X;
 	}
 }

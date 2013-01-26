@@ -12,6 +12,7 @@ import com.PsichiX.XenonCoreDroid.Framework.Graphics.Material;
 import com.PsichiX.ghettoride.physics.AdrenalinTabs;
 import com.PsichiX.ghettoride.physics.CollisionManager;
 import com.PsichiX.ghettoride.physics.ICollidable;
+import com.PsichiX.ghettoride.physics.ObstacleNet;
 
 public class Platform extends ActorSprite implements ICollidable {
 	private static int LAST_PLATFORM_ROLL = 3;
@@ -58,13 +59,13 @@ public class Platform extends ActorSprite implements ICollidable {
 		Camera2D cam = (Camera2D)getScene().getCamera();
 		if(getPositionX() == 0 && getPositionY() == 0) {
 			calculateNewPost();//cam);
-			addCollectiables();
+			addItem();
 			return;
 		}
 		
 		if(getPositionX() < cam.getViewPositionX() - cam.getViewWidth()*0.5f - getWidth()) {
 			calculateNewPost();//cam);
-			addCollectiables();
+			addItem();
 		}
 	}
 	
@@ -85,14 +86,20 @@ public class Platform extends ActorSprite implements ICollidable {
 		setPosition(newPosX, newPosY);
 	}
 	
-	private void addCollectiables() {
-		if(rand.nextFloat() > 0.7f) {
+	private void addItem() {
+		if(rand.nextFloat() > 0.5f) {
 			if(rand.nextFloat() > 0.5) {
-				AdrenalinTabs tab = new AdrenalinTabs(assets);
-				tab.setPosition(getPositionX() + rand.nextInt((int)getWidth()), getRecf().top);
-				getManager().attach(tab);
-				getScene().attach(tab);
-				getCollisionManager().attach(tab);
+				AdrenalinTabs tmp = new AdrenalinTabs(assets);
+				tmp.setPosition(getPositionX() + rand.nextInt((int)getWidth()), getRecf().top);
+				getManager().attach(tmp);
+				getScene().attach(tmp);
+				getCollisionManager().attach(tmp);
+			} else {
+				ObstacleNet tmp = new ObstacleNet(assets);
+				tmp.setPosition(getPositionX() + rand.nextInt((int)getWidth()), getRecf().top);
+				getManager().attach(tmp);
+				getScene().attach(tmp);
+				getCollisionManager().attach(tmp);
 			}
 		}
 	}
