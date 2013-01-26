@@ -15,6 +15,16 @@ public class MainActivity extends XeActivity
 	@Override
 	public void onCreate(android.os.Bundle savedInstanceState) 
 	{
+		// setup levels
+		levels.getLevels().add(new LevelInfo.Level("Level 1", R.raw.default_theme));
+		//
+		levels.getLevels().add(new LevelInfo.Level("Level 2", R.raw.default_theme));
+		levels.getLevels().add(new LevelInfo.Level("Level 3", R.raw.default_theme));
+		levels.getLevels().add(new LevelInfo.Level("Level 4", R.raw.default_theme));
+		levels.getLevels().add(new LevelInfo.Level("Level 5", R.raw.default_theme));
+		levels.getLevels().add(new LevelInfo.Level("Level 6", R.raw.default_theme));
+		//
+		
 		// setup application before running it
 		XeApplication.SETUP_SOUND_STREAMS = 16;
 		XeApplication.SETUP_WINDOW_HAS_TITLE = false;

@@ -7,6 +7,7 @@ import com.PsichiX.XenonCoreDroid.Framework.Graphics.SpriteSheet;
 import com.PsichiX.XenonCoreDroid.XeApplication.State;
 import com.PsichiX.XenonCoreDroid.XeApplication.Touches;
 import com.PsichiX.ghettoride.Parallax;
+import com.PsichiX.ghettoride.Platform;
 import com.PsichiX.ghettoride.R;
 import com.PsichiX.ghettoride.Theme;
 
@@ -81,5 +82,12 @@ public class MainMenuState extends State {
 	@Override
 	public void onInput(Touches arg0) {
 		_actormgr.onInput(arg0);
+	}
+	
+	@Override
+	public void onExit()
+	{
+		_scn.detachAll();
+		_actormgr.detachAll();
 	}
 }

@@ -1,33 +1,40 @@
 package com.PsichiX.ghettride.gamemenu;
 
+import java.util.List;
+
 import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorsManager;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Scene;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.SpriteSheet;
 import com.PsichiX.XenonCoreDroid.XeApplication.State;
+import com.PsichiX.XenonCoreDroid.XeApplication.Touch;
 import com.PsichiX.XenonCoreDroid.XeApplication.Touches;
+import com.PsichiX.ghettoride.MainActivity;
 import com.PsichiX.ghettoride.Parallax;
 import com.PsichiX.ghettoride.R;
 import com.PsichiX.ghettoride.Theme;
-import com.PsichiX.ghettoride.mainmenu.MainMenuPanel;
+import com.PsichiX.ghettoride.common.LevelInfo.Level;
 
 public class GameMenuState extends State {
 	private Camera2D _cam;
 	private Scene _scn;
 	
 	private Theme _theme;
-	private MainMenuPanel _mainMenuPanel;
 	private SpriteSheet _bgSheet;
 	private Parallax _parallax;
 	private Parallax.Layer _parallaxBg;
 	
 	private ActorsManager _actormgr = new ActorsManager();
+	private List<Level> levelList;
+	private int listPos = 0;
+	private ActorSpriteConteiner[] conteinerList;
 	
 	private int _themeId;
 	
 	public GameMenuState(int themeId) {
 		super();
 		this._themeId = themeId;
+		levelList = MainActivity.levels.getLevels();
 	}
 	
 	@Override
@@ -61,10 +68,7 @@ public class GameMenuState extends State {
 		_parallaxBg.setSize(_cam.getViewWidth(), _cam.getViewHeight());
 		_parallaxBg.setOffsetFromSize(0.5f, 0.5f);
 		
-		_mainMenuPanel = new MainMenuPanel(_theme);
-		_mainMenuPanel.setPosition(-_cam.getViewWidth()*0.5f, _cam.getViewPositionY() + _mainMenuPanel.getHeight()*0.5f);
-		_actormgr.attach(_mainMenuPanel);
-		_scn.attach(_mainMenuPanel);
+		addLevels();
 	}
 	
 	@Override
@@ -79,8 +83,79 @@ public class GameMenuState extends State {
 		_scn.update(dt);
 	}
 	
+	private float lastTouchDownX = -999f;
 	@Override
-	public void onInput(Touches arg0) {
-		_actormgr.onInput(arg0);
+	public void onInput(Touches ev) {
+		Touch touchDown = ev.getTouchByState(Touch.State.DOWN);
+		if(touchDown != null)
+		{
+			float[] worldLoc = _scn.getCamera().convertLocationScreenToWorld(touchDown.getX(), touchDown.getY(), -1f);
+			lastTouchDownX = worldLoc[0];
+		}
+		
+		Touch touchUp = ev.getTouchByState(Touch.State.UP);
+		if(touchUp != null)
+		{
+			float[] worldLoc = _scn.getCamera().convertLocationScreenToWorld(touchDown.getX(), touchDown.getY(), -1f);
+			if(Math.abs(worldLoc[0] - lastTouchDownX) > 25f) {
+				fling(worldLoc[0] > lastTouchDownX);
+				return;
+			}
+		}
+		
+		_actormgr.onInput(ev);
+	}
+	
+	private void fling(boolean fligRight) {
+		if(fligRight) {
+			if(listPos < levelList.size()-1) {
+				
+			}
+		} else {
+			
+		}
+	}
+	
+	private void addLevels() {
+		conteinerList = new ActorSpriteConteiner[levelList.size()];
+		for(int i=0; i<levelList.size(); i++) {
+			conteinerList[i] = new ActorSpriteConteiner();
+			
+			conteinerList[i].gameMenuPanel = new GameMenuPanel(_theme);
+			float offsetX = i*_cam.getViewWidth();
+			float posX = offsetX - conteinerList[i].gameMenuPanel.getWidth()*0.5f;
+			float posY = conteinerList[i].gameMenuPanel.getHeight()*0.5f;
+			conteinerList[i].gameMenuPanel.setPosition(posX, posY);
+			_actormgr.attach(conteinerList[i].gameMenuPanel);
+			_scn.attach(conteinerList[i].gameMenuPanel);
+			
+			posX = offsetX - conteinerList[i].gameMenuPanel.getWidth()*0.25f;
+			posY = conteinerList[i].gameMenuPanel.getHeight()*0.5f;
+			conteinerList[i].storyModeLvlNameText = new GameName();
+			conteinerList[i].storyModeLvlNameText.setPosition(posX, posY);
+			conteinerList[i].storyModeLvlNameText.build(getApplication().getAssets(), levelList.get(i).getName());
+			_scn.attach(conteinerList[i].storyModeLvlNameText);
+			
+			posX = offsetX + conteinerList[i].gameMenuPanel.getWidth()*0.25f;
+			posY = conteinerList[i].gameMenuPanel.getHeight()*0.5f;
+			conteinerList[i].freeRideLvlNameText = new GameName();
+			conteinerList[i].freeRideLvlNameText.setPosition(posX, posY);
+			conteinerList[i].freeRideLvlNameText.build(getApplication().getAssets(), levelList.get(i).getName());
+			_scn.attach(conteinerList[i].freeRideLvlNameText);
+		}
+	}
+	
+	@Override
+	public void onExit() {
+		_actormgr.detachAll();
+		_scn.detachAll();
+	}
+	
+	class ActorSpriteConteiner {
+		public float conteinerPosX;
+		
+		public GameMenuPanel gameMenuPanel;
+		public GameName storyModeLvlNameText;
+		public GameName freeRideLvlNameText;
 	}
 }

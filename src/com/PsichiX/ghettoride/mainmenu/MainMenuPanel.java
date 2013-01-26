@@ -8,13 +8,12 @@ import com.PsichiX.XenonCoreDroid.Framework.Graphics.Image;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Material;
 import com.PsichiX.XenonCoreDroid.XeApplication.Touch;
 import com.PsichiX.XenonCoreDroid.XeApplication.Touches;
+import com.PsichiX.ghettoride.MainActivity;
 import com.PsichiX.ghettoride.R;
 import com.PsichiX.ghettoride.Theme;
-import com.PsichiX.ghettoride.physics.CollisionManager;
+import com.PsichiX.ghettride.gamemenu.GameMenuState;
 
 public class MainMenuPanel extends ActorSprite {
-
-	private CollisionManager collisionManager;
 	private Theme theme;
 	
 	public MainMenuPanel(Theme th) {
@@ -29,7 +28,8 @@ public class MainMenuPanel extends ActorSprite {
 	
 	@Override
 	public void onInput(Touches ev) {
-		Touch touchDown = ev.getTouchByState(Touch.State.DOWN);
+		//Touch touchDown = ev.getTouchByState(Touch.State.DOWN);
+		Touch touchDown = ev.getTouchByState(Touch.State.UP);
 		if(touchDown != null)
 		{
 			Camera2D cam = (Camera2D)getScene().getCamera();
@@ -42,6 +42,7 @@ public class MainMenuPanel extends ActorSprite {
 					worldLoc[1] < cam.getViewPositionY()) 
 				{
 					Log.d("MAIN_MENU", "GRA");
+					MainActivity.app.pushState(new GameMenuState(theme.getId()));
 				} 
 				else if(worldLoc[1] > cam.getViewPositionY()  &&
 						worldLoc[1] < cam.getViewPositionY() + getHeight()*0.25f) 
@@ -56,5 +57,4 @@ public class MainMenuPanel extends ActorSprite {
 			}
 		}
 	}
-
 }

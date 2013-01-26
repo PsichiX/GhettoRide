@@ -19,8 +19,8 @@ public class GameMenuPanel extends ActorSprite {
 	public GameMenuPanel(Theme th) {
 		super(null);
 		theme = th;
-		Material mat = (Material)theme.getOwner().get(R.raw.main_menu_mat, Material.class);
-		Image img = (Image)theme.getOwner().get(R.drawable.main_menu, Image.class);
+		Material mat = (Material)theme.getOwner().get(R.raw.game_menu_mat, Material.class);
+		Image img = (Image)theme.getOwner().get(R.drawable.game_menu, Image.class);
 		setMaterial(mat);
 		setSizeFromImage(img);
 		setOffsetFromSize(0f, 1f);
@@ -28,29 +28,23 @@ public class GameMenuPanel extends ActorSprite {
 	
 	@Override
 	public void onInput(Touches ev) {
-		Touch touchDown = ev.getTouchByState(Touch.State.DOWN);
+		Touch touchDown = ev.getTouchByState(Touch.State.UP);
 		if(touchDown != null)
 		{
 			Camera2D cam = (Camera2D)getScene().getCamera();
 			float[] worldLoc = cam.convertLocationScreenToWorld(touchDown.getX(), touchDown.getY(), -1f);
-			if(worldLoc[0] > cam.getViewPositionX() - cam.getViewWidth()*0.5f &&
-				worldLoc[0] < cam.getViewPositionX() - cam.getViewWidth()*0.5f + getWidth())
-			{
-				
-				if(worldLoc[1] > cam.getViewPositionY() - getHeight()*0.25f &&
+			if(worldLoc[1] > cam.getViewPositionY() - getHeight()*0.25f &&
 					worldLoc[1] < cam.getViewPositionY()) 
+			{
+				if(worldLoc[0] > cam.getViewPositionX() - getWidth()*0.5f &&
+					worldLoc[0] < cam.getViewPositionX())
 				{
-					Log.d("MAIN_MENU", "GRA");
+					Log.d("MAIN_MENU", "STORY");
 				} 
-				else if(worldLoc[1] > cam.getViewPositionY()  &&
-						worldLoc[1] < cam.getViewPositionY() + getHeight()*0.25f) 
+				else if(worldLoc[0] > cam.getViewPositionX() - getWidth()*0.5f &&
+						worldLoc[0] < cam.getViewPositionX())
 				{
-					Log.d("MAIN_MENU", "HI SCORE");
-				}
-				else if(worldLoc[1] > cam.getViewPositionY() + getHeight()*0.25f &&
-						worldLoc[1] < cam.getViewPositionY() + getHeight()*0.5f) 
-				{
-					Log.d("MAIN_MENU", "CREDITS");
+					Log.d("MAIN_MENU", "FREE");
 				}
 			}
 		}
