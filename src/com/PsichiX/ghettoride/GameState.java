@@ -45,10 +45,13 @@ public class GameState extends State implements CommandQueue.Delegate
 	private Theme _theme;
 	private int _themeId = 0;
 	
-	public GameState(int themeId)
+	public static float ultimateCapsuleDistance = -1.0f;
+	
+	public GameState(int themeId, float ultimCapsDist)
 	{
 		super();
 		_themeId = themeId;
+		ultimateCapsuleDistance = ultimCapsDist;
 	}
 	
 	@Override

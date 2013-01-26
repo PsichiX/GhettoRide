@@ -1,7 +1,6 @@
 package com.PsichiX.ghettoride;
 
 import android.graphics.RectF;
-import android.util.Log;
 
 import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorSprite;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
@@ -41,26 +40,29 @@ public class Platform extends ActorSprite implements ICollidable {
 	
 	private float minPosY = 0f;
 	private float minPosX = 0f;
+	
 	@Override
-	public void onUpdate(float dt) {
-		Camera2D cam = (Camera2D)getScene().getCamera();
-		if(getPositionX() == 0 && getPositionY() == 0) {
-			calculateNewPost();
-			addItem();
-			return;
-		}
-		
-		if(getPositionX() < cam.getViewPositionX() - cam.getViewWidth()*0.5f - getWidth()) {
-			calculateNewPost();
-			addItem();
+	public void onUpdate(float dt)
+	{
+		Camera2D cam = (Camera2D)getScene().getCamera();	
+		if(getPositionX() < cam.getViewPositionX() - cam.getViewWidth()*0.5f - getWidth())
+		{
+			calculateNewPos();
+			if(	GameState.ultimateCapsuleDistance >= 0.0f &&
+				cam.getViewPositionX() > GameState.ultimateCapsuleDistance &&
+				getManager() != null
+				)
+				getManager().detach(this);
+			else
+				addItem();
 		}
 	}
 	
 	public void calculateStartPos() {
-		calculateNewPost();
+		calculateNewPos();
 	}
 	
-	private void calculateNewPost() {
+	private void calculateNewPos() {
 		float newPosX = LAST_PLATFORM_POS_X + minPosX + GlobalRandom.getRandom().nextInt((int)minPosX);
 		LAST_PLATFORM_POS_X = newPosX + getWidth();
 		
@@ -72,11 +74,10 @@ public class Platform extends ActorSprite implements ICollidable {
 		LAST_PLATFORM_ROLL = segmentPos;
 		float newPosY = minPosY - segmentPos * getHeight();
 		setPosition(newPosX, newPosY);
-		
-		Log.d("START", newPosX +" "+ newPosY);
 	}
 	
 	private float spawnProp = 0.1f;
+	
 	protected void addItem() {
 		if(GlobalRandom.getRandom().nextFloat() > spawnProp) {
 			if(GlobalRandom.getRandom().nextFloat() > 0.7) {
