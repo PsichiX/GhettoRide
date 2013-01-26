@@ -19,6 +19,8 @@ public class GameState extends State implements CommandQueue.Delegate
 	private Parallax.Layer _parallaxBg;
 	private CollisionManager _collmgr = new CollisionManager();
 	private Player _player;
+	private SpriteSheet _animSheet;
+	private FramesSequence _playerAnim = new FramesSequence();
 	
 	@Override
 	public void onEnter()
@@ -27,6 +29,12 @@ public class GameState extends State implements CommandQueue.Delegate
 		
 		_scn = (Scene)getApplication().getAssets().get(R.raw.scene, Scene.class);
 		_cam = (Camera2D)_scn.getCamera();
+		
+		_animSheet = (SpriteSheet)getApplication().getAssets().get(R.raw.animations_sheet, SpriteSheet.class);
+		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("player")));
+		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("player1")));
+		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("player2")));
+		_playerAnim.setDelay(0.5f);
 		
 		_bgSheet = (SpriteSheet)getApplication().getAssets().get(R.raw.background_sheet, SpriteSheet.class);
 		_parallax = new Parallax();
@@ -42,11 +50,12 @@ public class GameState extends State implements CommandQueue.Delegate
 				_cam.getViewPositionX() + _cam.getViewWidth() * 1.0f,
 				_cam.getViewPositionY()
 				);
-
+		
 		_player = new Player(getApplication().getAssets());
+		_player.setAnimation(_playerAnim);
 		_player.onAttach(_collmgr);
 		_player.setPosition(0, 0, -1);
-		
+
 		/*
 		Platform box = new Platform(getApplication().getAssets());
 		box.onAttach(_collmgr);

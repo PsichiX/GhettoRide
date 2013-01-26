@@ -3,15 +3,38 @@ package com.PsichiX.ghettoride;
 import java.util.ArrayList;
 
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.*;
-import com.PsichiX.XenonCoreDroid.XeUtils.*;
 
 public class FramesSequence
 {
 	private ArrayList<Frame> _frames = new ArrayList<Frame>();
 	private float _delay = 1.0f;
 	
+	public void addFrame(Frame f)
+	{
+		if(!_frames.contains(f))
+			_frames.add(f);
+	}
+	
+	public void removeFrame(Frame f)
+	{
+		if(_frames.contains(f))
+			_frames.remove(f);
+	}
+	
+	public void setDelay(float val)
+	{
+		_delay = val;
+	}
+	
+	public float getDelay()
+	{
+		return _delay;
+	}
+	
 	public void apply(Sprite spr, float time)
 	{
+		if(_delay == 0.0f)
+			return;
 		int frame = (int)(time / _delay) % _frames.size();
 		_frames.get(frame)._subImage.apply(spr);
 	}
@@ -19,14 +42,10 @@ public class FramesSequence
 	public static class Frame
 	{
 		protected SpriteSheet.SubImage _subImage;
-		protected float _xOffset = 0.0f;
-		protected float _yOffset = 0.0f;
 		
-		public Frame(SpriteSheet.SubImage sub, float xoff, float yoff)
+		public Frame(SpriteSheet.SubImage sub)
 		{
 			_subImage = sub;
-			_xOffset = xoff;
-			_yOffset = yoff;
 		}
 	}
 	
@@ -74,6 +93,8 @@ public class FramesSequence
 		
 		public void update(float dt, float speed)
 		{
+			if(_owner == null || _target == null)
+				return;
 			_time += dt * speed;
 			_owner.apply(_target, _time);
 		}

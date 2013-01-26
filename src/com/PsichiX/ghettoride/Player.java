@@ -23,6 +23,7 @@ public class Player extends ActorSprite implements ICollidable {
 	private float _posY = 0.0f;
 	private float _spdX = 250f;//100.0f;
 	private float _spdY = -10f;//100.0f;
+	private FramesSequence.Animator _animator;
 	
 	private float lastY = 0f;
 	
@@ -36,6 +37,12 @@ public class Player extends ActorSprite implements ICollidable {
 		setMaterial(mat);
 		setSizeFromImage(img);
 		setOffsetFromSize(0f, 1f);
+		_animator = new FramesSequence.Animator(null, this);
+	}
+	
+	public void setAnimation(FramesSequence anim)
+	{
+		_animator.setOwner(anim);
 	}
 	
 	@Override
@@ -129,6 +136,8 @@ public class Player extends ActorSprite implements ICollidable {
 		setPosition(_posX, _posY);
 		
 		isOnGround = false;
+		
+		_animator.update(dt, 1.0f);
 	}
 	
 	private void jump() {
