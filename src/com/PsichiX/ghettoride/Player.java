@@ -21,8 +21,8 @@ public class Player extends ActorSprite implements ICollidable {
 	private float _histPosY = 0f;
 	private float _posX = 0.0f;
 	private float _posY = 0.0f;
-	private float _spdX = 100.0f;
-	private float _spdY = 0f;//100.0f;
+	private float _spdX = 250f;//100.0f;
+	private float _spdY = -10f;//100.0f;
 	
 	private float lastY = 0f;
 	
@@ -55,16 +55,16 @@ public class Player extends ActorSprite implements ICollidable {
 			float BORDER = 0.6f;
 			
 			if(Math.abs(diff) > BORDER)
-				Log.d("event", "border: " + diff + " " + Y + " " + lastY);
+				//Log.d("event", "border: " + diff + " " + Y + " " + lastY);
 			
 			if(diff > BORDER && isOnGround) {
 				isOnGround = false;
 				_spdY = 100f;
-				Log.d("event", "JUMP");
+				//Log.d("event", "JUMP");
 			}
 			lastY = Y;
 			
-			Log.d("event", "acc: " + String.format("%.2f", Y) + " diff " + String.format("%.2f", diff));
+			//Log.d("event", "acc: " + String.format("%.2f", Y) + " diff " + String.format("%.2f", diff));
 			
 			//Log.d("event", "acc: " + String.format("%.2f", Y) + " diff " + String.format("%.2f", diff));
 			//Log.d("event", "acc: " + String.format("%.2f", ev.values[0]) + " diff " + String.format("%.2f", ev.values[1]));
@@ -117,7 +117,7 @@ public class Player extends ActorSprite implements ICollidable {
 		
 		_posY -= _spdY * dt;
 		_posX += _spdX * dt;
-		Log.d("event", "_posY: " + _posY);
+		//Log.d("event", "_posY: " + _posY);
 		if(!isOnGround) {
 			flying(dt);
 		}
@@ -126,26 +126,23 @@ public class Player extends ActorSprite implements ICollidable {
 			rolling(dt);
 		}
 		
-		setPosition(
-			//Math.max(-w, Math.min(w, _x + _movX * _spdX * dt)),
-			//Math.max(-h, Math.min(h, _y + _movY * _spdY * dt))
-			//w, h
-			_posX, _posY
-			);
+		setPosition(_posX, _posY);
+		
+		isOnGround = false;
 	}
 	
 	private void jump() {
 		if(isOnGround && !isRollin) {
 			isOnGround = false;
 			_spdY = 500f;
-			Log.d("event", "JUMP");
+			//Log.d("event", "JUMP");
 		}
 	}
 	
 	private void roll() {
 		if(isOnGround && !isRollin) {
 			isRollin = true;
-			Log.d("event", "ROOL");
+			//Log.d("event", "ROOL");
 			this.setAngle(-90f);
 		}
 	}
@@ -161,7 +158,9 @@ public class Player extends ActorSprite implements ICollidable {
 	private void touchGround(float groundPosY) {
 		_posY = groundPosY;
 		isOnGround = true;
-		_spdY = 0f;
+		_spdY = -10f;
+		
+		setPosition(_posX, _posY);
 	}
 	
 	private float rollingTime = 0f;
@@ -208,9 +207,10 @@ public class Player extends ActorSprite implements ICollidable {
 	@Override
 	public void onCollision(ICollidable o) {
 		if(o instanceof Platform) {
-			Log.d("COL", "BOX COLL");
-			if(_histPosY < _posY && _histPosY < o.getRecf().top) {
+			if(_histPosY <= _posY && _histPosY <= o.getRecf().top) {
 				touchGround(o.getRecf().top);
+				isOnGround = true;
+				//Log.d("COL", "BOX COLL " + o.getRecf().top);
 			}
 		}
 	}

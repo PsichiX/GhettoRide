@@ -47,19 +47,42 @@ public class GameState extends State implements CommandQueue.Delegate
 		_player.onAttach(_collmgr);
 		_player.setPosition(0, 0, -1);
 		
+		/*
 		Platform box = new Platform(getApplication().getAssets());
 		box.onAttach(_collmgr);
 		box.setPosition(20, -50);
+		*/
+		//Platform[] list = new Platform[10];
+		for(int i=0; i<5; i++) {
+			Platform tmp = new Platform(getApplication().getAssets());
+			tmp.onAttach(_collmgr);
+			//tmp.setPosition(i*tmp.getWidth()*2, -50);
+			//tmp.calculateStartPos();
+			_actors.attach(tmp);
+			_scn.attach(tmp);
+			tmp.calculate();
+			tmp.calculateStartPos();
+		}
 		
-		Platform floor = new Platform(getApplication().getAssets());
-		floor.setSize(_cam.getViewWidth(), _cam.getViewHeight()*0.1f);
-		floor.setPosition(-_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.5f);
-		floor.onAttach(_collmgr);
+		Floor floor1 = new Floor(getApplication().getAssets());
+		floor1.setSize(_cam.getViewWidth(), _cam.getViewHeight()*0.1f);
+		floor1.setPosition(-_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.5f);
+		floor1.onAttach(_collmgr);
+		
+		Floor floor2 = new Floor(getApplication().getAssets());
+		floor2.setSize(_cam.getViewWidth(), _cam.getViewHeight()*0.1f);
+		floor2.setPosition(_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.5f);
+		floor2.onAttach(_collmgr);
 		
 		_actors.attach(_player);
+		_actors.attach(floor1);
+		_actors.attach(floor2);
+		
 		_scn.attach(_player);
-		_scn.attach(box);
-		_scn.attach(floor);
+		_scn.attach(floor1);
+		_scn.attach(floor2);
+		
+		//box.calculate();
 	}
 	
 	@Override
