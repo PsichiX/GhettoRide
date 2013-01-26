@@ -26,7 +26,7 @@ public class MainActivity extends XeActivity
 		app = getApplicationCore();
 		Utils.initModule(getApplicationCore().getAssets());
 		Graphics.initModule(getApplicationCore().getAssets(), getApplicationCore().getPhoton());
-		getApplicationCore().getTimer().setFixedStep(1000 / 30);
+		getApplicationCore().getTimer().setFixedStep(1000 / 25);
 		getApplicationCore().getPhoton().getRenderer().getTimer().setFixedStep(1000 / 30);
 		getApplicationCore().getPhoton().getRenderer().setClearBackground(true, 1.0f, 1.0f, 1.0f, 1.0f);
 		getApplicationCore().getPhoton().clearDrawCalls();

@@ -3,6 +3,7 @@ package com.PsichiX.ghettoride;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.*;
 import com.PsichiX.XenonCoreDroid.XeUtils.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Parallax
 {
@@ -57,25 +58,42 @@ public class Parallax
 	{
 		for(Layer lr : _layers)
 		{
-			float tx = lr.getPositionX() + (lr._spdX * dt);
-			float ty = lr.getPositionY() + (lr._spdY * dt);
-			tx = TempCommon.modulo(tx, _areaX, _areaX + _areaW);
-			ty = TempCommon.modulo(ty, _areaY, _areaY + _areaH);
-			lr.setPosition(tx, ty);
+			if(!lr._static)
+			{
+				float tx = lr.getPositionX() + (lr._spdX * dt);
+				float ty = lr.getPositionY() + (lr._spdY * dt);
+				tx = Commons.modulo(tx, _areaX, _areaX + _areaW);
+				ty = Commons.modulo(ty, _areaY, _areaY + _areaH);
+				lr.setPosition(tx, ty);
+			}
 		}
 	}
 	
-	public class Layer extends Sprite
+	public static class Layer extends Sprite
 	{
 		protected float _spdX = 0.0f;
 		protected float _spdY = 0.0f;
+		protected boolean _static = false;
 		
-		public Layer(SpriteSheet.SubImage sheetImg, float spdX, float spdY)
+		public Layer(SpriteSheet.SubImage sheetImg, float spdX, float spdY, boolean isStatic)
 		{
 			super(null);
 			sheetImg.apply(this);
+			setOffsetFromSize(0.5f, 0.5f);
 			_spdX = spdX;
 			_spdY = spdY;
+			_static = isStatic;
+		}
+	}
+
+	public void randomizeLayers(float minX, float minY, float maxX, float maxY)
+	{
+		Random rand = new Random(System.currentTimeMillis());
+		for(Layer lr : _layers)
+		{
+			float tx = minX + (rand.nextFloat() * (maxX - minX));
+			float ty = minY + (rand.nextFloat() * (maxY - minY));
+			lr.setPosition(tx, ty);
 		}
 	}
 }

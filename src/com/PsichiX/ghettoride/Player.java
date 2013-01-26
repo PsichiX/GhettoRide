@@ -21,7 +21,7 @@ public class Player extends ActorSprite implements ICollidable {
 	private float _histPosY = 0f;
 	private float _posX = 0.0f;
 	private float _posY = 0.0f;
-	private float _spdX = 50f;//100.0f;
+	private float _spdX = 100.0f;
 	private float _spdY = 0f;//100.0f;
 	
 	private float lastY = 0f;

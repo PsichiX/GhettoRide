@@ -2,8 +2,10 @@ package com.PsichiX.ghettoride;
 
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Sprite;
 
-public class Commons {
-	public static boolean containst(float x, float y, Sprite actor) {
+public class Commons
+{	
+	public static boolean containst(float x, float y, Sprite actor)
+	{
 		float minX = actor.getPositionX() - actor.getOffsetX();
 		float maxX = minX + actor.getWidth();
 		if(minX > x || maxX < x)
@@ -15,5 +17,14 @@ public class Commons {
 			return false;
 		
 		return true;
+	}
+	
+	public static float modulo(float val, float min, float max)
+	{
+		float mmin = Math.min(min, max);
+		float mmax = Math.max(min, max);
+		float r = val - mmin;
+		float s = mmax - mmin;
+		return (r - ((float)Math.floor(r / s) * s)) + mmin;
 	}
 }

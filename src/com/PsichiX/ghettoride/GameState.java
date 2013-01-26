@@ -14,10 +14,9 @@ public class GameState extends State implements CommandQueue.Delegate
 	private ShapeComparator.DescZ _sorter = new ShapeComparator.DescZ();
 	private ActorsManager _actors = new ActorsManager();
 	private CommandQueue _cmds = new CommandQueue();
-	private Sprite _bg;
-	private Sprite _parallax[] = new Sprite[6];
 	private SpriteSheet _bgSheet;
-
+	private Parallax _parallax;
+	private Parallax.Layer _parallaxBg;
 	private CollisionManager _collmgr = new CollisionManager();
 	private Player _player;
 	
@@ -30,10 +29,19 @@ public class GameState extends State implements CommandQueue.Delegate
 		_cam = (Camera2D)_scn.getCamera();
 		
 		_bgSheet = (SpriteSheet)getApplication().getAssets().get(R.raw.background_sheet, SpriteSheet.class);
-		_bg = new Sprite(null); 
-		_bgSheet.getSubImage("bg").apply(_bg);
-		_bg.setOffsetFromSize(0.5f, 0.5f);
-		_scn.attach(_bg);
+		_parallax = new Parallax();
+		_parallax.setScene(_scn);
+		_parallaxBg = new Parallax.Layer(_bgSheet.getSubImage("bg"), 0.0f, 0.0f, true);
+		_parallax.addLayer(_parallaxBg);
+		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane2"), -100.0f, 0.0f, false));
+		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane3"), -40.0f, 0.0f, false));
+		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane4"), -10.0f, 0.0f, false));
+		_parallax.randomizeLayers(
+				_cam.getViewPositionX() - _cam.getViewWidth() * 1.0f,
+				_cam.getViewPositionY(),
+				_cam.getViewPositionX() + _cam.getViewWidth() * 1.0f,
+				_cam.getViewPositionY()
+				);
 
 		_player = new Player(getApplication().getAssets());
 		_player.onAttach(_collmgr);
@@ -83,12 +91,18 @@ public class GameState extends State implements CommandQueue.Delegate
 		getApplication().getPhoton().clearDrawCalls();
 		_cmds.run();
 		_actors.onUpdate(dt);
-
 		_collmgr.test();
-		
 		_cam.setViewPosition(_player.getPositionX() + _cam.getViewWidth()*0.25f, 0);
-
-		_bg.setPosition(_cam.getViewPositionX(), _cam.getViewPositionY());
+		_parallax.setArea(
+				_cam.getViewPositionX() - _cam.getViewWidth() * 1.0f,
+				_cam.getViewPositionY() - _cam.getViewHeight() * 1.0f,
+				_cam.getViewWidth() * 2.0f,
+		 		_cam.getViewHeight() * 2.0f
+				);
+		_parallax.onUpdate(dt);
+		_parallaxBg.setPosition(_cam.getViewPositionX(), _cam.getViewPositionY());
+		_parallaxBg.setSize(_cam.getViewWidth(), _cam.getViewHeight());
+		_parallaxBg.setOffsetFromSize(0.5f, 0.5f);
 		_scn.sort(_sorter);
 		_scn.update(dt);
 	}
