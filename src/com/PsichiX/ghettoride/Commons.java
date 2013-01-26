@@ -1,5 +1,7 @@
 package com.PsichiX.ghettoride;
 
+import com.PsichiX.XenonCoreDroid.Framework.Graphics.IRenderable;
+import com.PsichiX.XenonCoreDroid.Framework.Graphics.Shape;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Sprite;
 
 public class Commons
@@ -26,5 +28,9 @@ public class Commons
 		float r = val - mmin;
 		float s = mmax - mmin;
 		return (r - ((float)Math.floor(r / s) * s)) + mmin;
+	}
+	
+	public static float distanceX(Shape a, Shape b) {
+		return a.getPositionX() - b.getPositionX();
 	}
 }

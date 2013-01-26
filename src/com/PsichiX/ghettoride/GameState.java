@@ -4,7 +4,9 @@ import com.PsichiX.XenonCoreDroid.XeApplication.*;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.*;
 import com.PsichiX.XenonCoreDroid.Framework.Actors.*;
 import com.PsichiX.XenonCoreDroid.XeSense.EventData;
-import com.PsichiX.XenonCoreDroid.XeUtils.*;import com.PsichiX.ghettoride.gui.SyringeBackgroundGui;
+import com.PsichiX.XenonCoreDroid.XeUtils.*;
+import com.PsichiX.ghettoride.gui.NiggaIndicator;
+import com.PsichiX.ghettoride.gui.SyringeBackgroundGui;
 import com.PsichiX.ghettoride.gui.SyringeFrontGui;
 import com.PsichiX.XenonCoreDroid.XeEcho;
 import com.PsichiX.ghettoride.physics.CollisionManager;
@@ -29,6 +31,8 @@ public class GameState extends State implements CommandQueue.Delegate
 	private SpriteSheet _animSheet;
 	private FramesSequence _playerAnim = new FramesSequence();
 	private XeEcho.Sound _heartSnd;
+	private NiggaCrew _niggaCrew;
+	private NiggaIndicator _niggaIndicator;
 	
 	@Override
 	public void onEnter()
@@ -89,6 +93,12 @@ public class GameState extends State implements CommandQueue.Delegate
 		floor2.setPosition(_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.5f);
 		floor2.onAttach(_collmgr);
 		
+		_niggaCrew = new NiggaCrew(getApplication().getAssets());
+		_niggaCrew.setPosition(_cam.getViewPositionX() - _cam.getViewWidth(), floor1.getRecf().top);
+		_actors.attach(_niggaCrew);
+		_collmgr.attach(_niggaCrew);
+		_scn.attach(_niggaCrew);
+		
 		_player.setFloorTop(floor1.getRecf().top);
 		
 		_actors.attach(_player);
@@ -106,6 +116,12 @@ public class GameState extends State implements CommandQueue.Delegate
 		_syringeFront = new SyringeFrontGui(getApplication().getAssets());
 		_syringeFront.setPosition(_cam.getViewPositionX(), -_cam.getViewHeight()*0.4f, -1f);
 		_scn.attach(_syringeFront);
+		
+		_niggaIndicator = new NiggaIndicator();
+		_niggaIndicator.setPosition(-_cam.getViewWidth()*0.5f, _cam.getViewPositionY(), -1f);
+		_niggaIndicator.build(getApplication().getAssets(), Commons.distanceX(_player, _niggaCrew));
+		_scn.attach(_niggaIndicator);
+		_niggaIndicator.build(getApplication().getAssets(), Commons.distanceX(_player, _niggaCrew));
 		
 		getApplication().getTimer().reset();
 	}
@@ -178,5 +194,8 @@ public class GameState extends State implements CommandQueue.Delegate
 		
 		_syringeFront.setPosition(_cam.getViewPositionX(), _cam.getViewPositionY()-_cam.getViewHeight()*0.4f);
 		_syringeFront.setSize(_player.getNormPlayerSpeed());
+		
+		_niggaIndicator.setPosition(_cam.getViewPositionX()-_cam.getViewWidth()*0.5f, _cam.getViewPositionY());
+		_niggaIndicator.build(getApplication().getAssets(), Commons.distanceX(_player, _niggaCrew));
 	}
 }

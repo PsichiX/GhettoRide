@@ -20,13 +20,15 @@ import com.PsichiX.ghettoride.physics.Obstacle;
 public class Player extends ActorSprite implements ICollidable {
 	private CollisionManager collisionManager;
 	
+	private float _distanceTraveled = 0f;
+	
 	private float _histPosX = 0f;
 	private float _histPosY = 0f;
 	private float _posX = 0.0f;
 	private float _posY = 0.0f;
 	
-	private float MAX_SPEED_X = 1000f;
-	private float MIN_SPEED_Y = 50f;
+	public static float MAX_SPEED_X = 1000f;
+	public static float MIN_SPEED_X = 50f;
 	private float _spdX = 500f;
 	private float _spdY = -50f;
 	private FramesSequence.Animator _animator;
@@ -73,12 +75,15 @@ public class Player extends ActorSprite implements ICollidable {
 		{
 			Camera2D cam = (Camera2D)getScene().getCamera();
 			float[] worldLoc = cam.convertLocationScreenToWorld(touchUp.getX(), touchUp.getY(), -1f);
-			if(worldLoc[1] < lastTouchDownY) {
-				jump();
-			} else if(worldLoc[1] > lastTouchDownY) {
-				fall();
-			}
-			isTouchDownPlayer = false;
+			//if(isTouchDownPlayer) {
+				if(worldLoc[1] < lastTouchDownY) {
+					jump();
+				} else if(worldLoc[1] > lastTouchDownY) {
+					//roll();
+					fall();
+				}
+			//}
+			//isTouchDownPlayer = false;
 		}
 	}
 	
@@ -90,6 +95,8 @@ public class Player extends ActorSprite implements ICollidable {
 		float h = cam.getViewHeight() * 0.5f;*/
 		_histPosX = _posX;
 		_histPosY = _posY;
+		
+		_distanceTraveled += _spdX * dt;
 		
 		_posY -= _spdY * dt;
 		_posX += _spdX * dt;
@@ -109,16 +116,8 @@ public class Player extends ActorSprite implements ICollidable {
 	private void jump() {
 		if(isOnGround && !isRollin) {
 			isOnGround = false;
-			_spdY = 500f;
+			_spdY = 700f;
 			//Log.d("event", "JUMP");
-		}
-	}
-	
-	private void roll() {
-		if(isOnGround && !isRollin) {
-			isRollin = true;
-			//Log.d("event", "ROOL");
-			this.setAngle(-90f);
 		}
 	}
 	
@@ -132,11 +131,7 @@ public class Player extends ActorSprite implements ICollidable {
 	}
 	
 	private void flying(float dt) {
-		/*if(_posY > 0) {
-			touchGround(0f);
-		} else {*/
-			_spdY -= 700f * dt;
-		//}
+		_spdY -= 1700f * dt;
 	}
 	
 	private void touchGround(float groundPosY) {
@@ -149,17 +144,6 @@ public class Player extends ActorSprite implements ICollidable {
 	
 	public void setFloorTop(float floorTop) {
 		this.floorTop = floorTop;
-	}
-	
-	private float rollingTime = 0f;
-	private float rollingMaxTime = 1f;
-	private void rolling(float dt) {
-		rollingTime += dt;
-		if(rollingTime > rollingMaxTime) {
-			isRollin = false;
-			rollingTime = 0;
-			this.setAngle(0f);
-		}
 	}
 
 	@Override
@@ -206,15 +190,22 @@ public class Player extends ActorSprite implements ICollidable {
 		} else if(o instanceof Obstacle) {
 			if(((Obstacle)o).inactiv())
 				addSpeed(-0.1f*MAX_SPEED_X);
+		} else if(o instanceof NiggaCrew) {
+			resetSpeed();
+			((NiggaCrew)o).resetSpeed();
 		} 
 	}
 	
 	private void addSpeed(float deltaSpeed) {
 		_spdX += deltaSpeed;
-		if(_spdX < MIN_SPEED_Y)
-			_spdX = MIN_SPEED_Y;
+		if(_spdX < MIN_SPEED_X)
+			_spdX = MIN_SPEED_X;
 		if(_spdX > MAX_SPEED_X)
 			_spdX = MAX_SPEED_X;
+	}
+	
+	private void resetSpeed() {
+		_spdX = 0f;
 	}
 	
 	public float getNormPlayerSpeed() {
