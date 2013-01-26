@@ -216,7 +216,7 @@ public class GameState extends State implements CommandQueue.Delegate
 		
 		if(!_player.isAlive()) {
 			getApplication().popState();
-			getApplication().pushState(new ResultMenuState(_player.getDistanceTravelled()));
+			getApplication().pushState(new ResultMenuState(_themeId, _player.getResult()));
 		}
 	}
 	

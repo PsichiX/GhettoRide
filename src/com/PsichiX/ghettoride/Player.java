@@ -24,6 +24,7 @@ public class Player extends ActorSprite implements ICollidable {
 	private CollisionManager collisionManager;
 	
 	private float _distanceTraveled = 0f;
+	private float _timePlayed = 0f;
 	
 	private boolean isAlive = true;
 	
@@ -112,6 +113,7 @@ public class Player extends ActorSprite implements ICollidable {
 		_histPosY = _posY;
 		
 		_distanceTraveled += _spdX * dt;
+		_timePlayed += dt;
 		
 		_posY -= _spdY * dt;
 		_posX += _spdX * dt;
@@ -286,5 +288,12 @@ public class Player extends ActorSprite implements ICollidable {
 	
 	public boolean isAlive() {
 		return isAlive;
+	}
+	
+	public Result getResult() {
+		Result result = new Result();
+		result.setDistanceTravelled(_distanceTraveled);
+		result.setTimePlayed(_timePlayed);
+		return result;
 	}
 }

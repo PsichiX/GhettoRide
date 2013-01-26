@@ -1,4 +1,4 @@
-package com.PsichiX.ghettoride.resultmenu;
+package com.PsichiX.ghettride.gamemenu;
 
 import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorsManager;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
@@ -8,28 +8,26 @@ import com.PsichiX.XenonCoreDroid.XeApplication.State;
 import com.PsichiX.XenonCoreDroid.XeApplication.Touches;
 import com.PsichiX.ghettoride.Parallax;
 import com.PsichiX.ghettoride.R;
-import com.PsichiX.ghettoride.Result;
 import com.PsichiX.ghettoride.Theme;
+import com.PsichiX.ghettoride.mainmenu.MainMenuPanel;
 
-public class ResultMenuState extends State {
+public class GameMenuState extends State {
 	private Camera2D _cam;
 	private Scene _scn;
 	
 	private Theme _theme;
-	private ResultMenuDialog _resultMenuDialog;
+	private MainMenuPanel _mainMenuPanel;
 	private SpriteSheet _bgSheet;
 	private Parallax _parallax;
 	private Parallax.Layer _parallaxBg;
 	
 	private ActorsManager _actormgr = new ActorsManager();
 	
-	private Result result;
 	private int _themeId;
 	
-	public ResultMenuState(int themeId, Result result) {
+	public GameMenuState(int themeId) {
 		super();
 		this._themeId = themeId;
-		this.result = result;
 	}
 	
 	@Override
@@ -52,15 +50,21 @@ public class ResultMenuState extends State {
 				_cam.getViewPositionY(),
 				_cam.getViewPositionX() + _cam.getViewWidth() * 1.0f,
 				_cam.getViewPositionY());
+		_parallax.setArea(
+				_cam.getViewPositionX() - _cam.getViewWidth() * 1.0f,
+				_cam.getViewPositionY() - _cam.getViewHeight() * 1.0f,
+				_cam.getViewWidth() * 2.0f,
+		 		_cam.getViewHeight() * 2.0f
+				);
 		
 		_parallaxBg.setPosition(_cam.getViewPositionX(), _cam.getViewPositionY());
 		_parallaxBg.setSize(_cam.getViewWidth(), _cam.getViewHeight());
 		_parallaxBg.setOffsetFromSize(0.5f, 0.5f);
 		
-		_resultMenuDialog = new ResultMenuDialog(getApplication().getAssets());
-		_resultMenuDialog.setPosition(_cam.getViewPositionX() - _resultMenuDialog.getWidth()*0.5f, _cam.getViewPositionY() + _resultMenuDialog.getHeight()*0.5f);
-		_actormgr.attach(_resultMenuDialog);
-		_scn.attach(_resultMenuDialog);
+		_mainMenuPanel = new MainMenuPanel(_theme);
+		_mainMenuPanel.setPosition(-_cam.getViewWidth()*0.5f, _cam.getViewPositionY() + _mainMenuPanel.getHeight()*0.5f);
+		_actormgr.attach(_mainMenuPanel);
+		_scn.attach(_mainMenuPanel);
 	}
 	
 	@Override
