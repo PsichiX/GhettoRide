@@ -22,13 +22,13 @@ public class Platform extends ActorSprite implements ICollidable {
 	public static float LAST_PLATFORM_POS_X = 0f;
 	
 	private CollisionManager collisionManager;
-	private XeAssets assets;
+	private Theme theme;
 	
-	public Platform(XeAssets assets) {
+	public Platform(Theme th) {
 		super(null);
-		this.assets = assets;
-		Material mat = (Material)assets.get(R.raw.box_material, Material.class);
-		Image img = (Image)assets.get(R.drawable.box, Image.class);
+		theme = th;
+		Material mat = (Material)theme.getOwner().get(R.raw.box_material, Material.class);
+		Image img = (Image)theme.getOwner().get(R.drawable.box, Image.class);
 		setMaterial(mat);
 		setSizeFromImage(img);
 		setOffsetFromSize(0f, 1f);
@@ -83,20 +83,20 @@ public class Platform extends ActorSprite implements ICollidable {
 			if(GlobalRandom.getRandom().nextFloat() > 0.5) {
 				Collectibles tmp;
 				if(GlobalRandom.getRandom().nextFloat() > 0.75) {
-					 tmp = new AdrenalinTabs(assets);
+					 tmp = new AdrenalinTabs(theme);
 				} else if(GlobalRandom.getRandom().nextFloat() > 0.5) {
-					tmp = new StopTab(assets);
+					tmp = new StopTab(theme);
 				} else if(GlobalRandom.getRandom().nextFloat() > 0.25) {
-					tmp = new JumpTab(assets);
+					tmp = new JumpTab(theme);
 				} else {
-					tmp = new GoodTabs(assets);
+					tmp = new GoodTabs(theme);
 				}
 				tmp.setPosition(getPositionX() + getWidth()/2 + GlobalRandom.getRandom().nextInt((int)getWidth()/2), getRecf().top);
 				getManager().attach(tmp);
 				getScene().attach(tmp);
 				getCollisionManager().attach(tmp);
 			} else {
-				ObstacleNet tmp = new ObstacleNet(assets);
+				ObstacleNet tmp = new ObstacleNet(theme);
 				tmp.setPosition(getPositionX() + getWidth()/2 + GlobalRandom.getRandom().nextInt((int)getWidth()/2), getRecf().top);
 				getManager().attach(tmp);
 				getScene().attach(tmp);
