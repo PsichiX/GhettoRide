@@ -7,7 +7,6 @@ import com.PsichiX.XenonCoreDroid.Framework.Graphics.*;
 import com.PsichiX.XenonCoreDroid.Framework.Actors.*;
 import com.PsichiX.XenonCoreDroid.XeSense.EventData;
 import com.PsichiX.XenonCoreDroid.XeUtils.*;
-import com.PsichiX.XenonCoreDroid.XeSense;
 
 public class GameState extends State implements CommandQueue.Delegate
 {
@@ -17,7 +16,7 @@ public class GameState extends State implements CommandQueue.Delegate
 	private ActorsManager _actors = new ActorsManager();
 	private CommandQueue _cmds = new CommandQueue();
 	private Sprite _bg;
-	private Sprite _parallax[] = new Sprite[2];
+	private Sprite _parallax[] = new Sprite[6];
 	private SpriteSheet _bgSheet;
 	
 	@Override
