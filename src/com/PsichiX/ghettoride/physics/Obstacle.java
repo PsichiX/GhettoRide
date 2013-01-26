@@ -1,8 +1,11 @@
 package com.PsichiX.ghettoride.physics;
 
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorSprite;
+import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorsManager;
+import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Material;
 
 public class Obstacle extends ActorSprite implements ICollidable {
@@ -10,6 +13,15 @@ public class Obstacle extends ActorSprite implements ICollidable {
 	
 	public Obstacle(Material arg0) {
 		super(arg0);
+	}
+	
+	@Override
+	public void onUpdate(float dt) {
+		Camera2D cam = (Camera2D)getScene().getCamera();
+		if(getPositionX() < cam.getViewPositionX() - cam.getViewWidth()*0.5f - getWidth()) {
+			getManager().detach(this);
+			Log.d("del", "delete obst");
+		}
 	}
 
 	private CollisionManager collisionManager;
@@ -25,6 +37,12 @@ public class Obstacle extends ActorSprite implements ICollidable {
 		if(collisionManager == m) {
 			collisionManager = null;
 		}
+	}
+	
+	@Override
+	public void onDetach(ActorsManager arg0) {
+		super.onDetach(arg0);
+		getCollisionManager().detach(this);
 	}
 
 	@Override

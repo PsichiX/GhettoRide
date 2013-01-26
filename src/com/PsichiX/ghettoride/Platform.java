@@ -1,8 +1,7 @@
 package com.PsichiX.ghettoride;
 
-import java.util.Random;
-
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.PsichiX.XenonCoreDroid.XeAssets;
 import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorSprite;
@@ -10,16 +9,19 @@ import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Image;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Material;
 import com.PsichiX.ghettoride.physics.AdrenalinTabs;
+import com.PsichiX.ghettoride.physics.Collectibles;
 import com.PsichiX.ghettoride.physics.CollisionManager;
+import com.PsichiX.ghettoride.physics.GoodTabs;
 import com.PsichiX.ghettoride.physics.ICollidable;
+import com.PsichiX.ghettoride.physics.JumpTab;
 import com.PsichiX.ghettoride.physics.ObstacleNet;
+import com.PsichiX.ghettoride.physics.StopTab;
 
 public class Platform extends ActorSprite implements ICollidable {
 	private static int LAST_PLATFORM_ROLL = 3;
-	private static float LAST_PLATFORM_POS_X = 0f;
+	public static float LAST_PLATFORM_POS_X = 0f;
 	
 	private CollisionManager collisionManager;
-	private Random rand;
 	private XeAssets assets;
 	
 	public Platform(XeAssets assets) {
@@ -30,77 +32,79 @@ public class Platform extends ActorSprite implements ICollidable {
 		setMaterial(mat);
 		setSizeFromImage(img);
 		setOffsetFromSize(0f, 1f);
-		
-		rand = new Random(System.currentTimeMillis());
 	}
 	
 	public void calculate() {
 		Camera2D cam = (Camera2D)getScene().getCamera();
-		//minPosY = cam.getViewPositionY() + cam.getViewHeight()*0.4f;//*0.2f;
-		//rangePosY = (int)(cam.getViewHeight()*0.4f);//6f);
-		
-		minPosX = getWidth()*0.5f;//cam.getViewWidth()*0.5f;
+		minPosX = getWidth()*0.5f;
 		minPosY = cam.getViewHeight()*0.5f;
-		//rangePosX = (int)cam.getViewWidth();
-		
-		/*float[] loc = cam.convertLocationScreenToWorld(0, 450, -1);
-		Log.d("min", "plat: " + loc[0] + " " + loc[1]);
-		minPlatformPos = loc[1];*/
 	}
 	
-	/*private float minPosY = 0f;
-	private int rangePosY = 0;
-	private float minPosX = 0f;
-	private int rangePosX = 0;*/
 	private float minPosY = 0f;
 	private float minPosX = 0f;
 	@Override
 	public void onUpdate(float dt) {
 		Camera2D cam = (Camera2D)getScene().getCamera();
 		if(getPositionX() == 0 && getPositionY() == 0) {
-			calculateNewPost();//cam);
+			calculateNewPost();
 			addItem();
 			return;
 		}
 		
 		if(getPositionX() < cam.getViewPositionX() - cam.getViewWidth()*0.5f - getWidth()) {
-			calculateNewPost();//cam);
+			calculateNewPost();
 			addItem();
 		}
 	}
 	
 	public void calculateStartPos() {
 		calculateNewPost();
-		//addCollectiables();
 	}
 	
-	private void calculateNewPost(/*Camera2D cam*/) {
-		float newPosX = /*cam.getViewPositionX()*/ LAST_PLATFORM_POS_X + minPosX + rand.nextInt((int)minPosX);
+	private void calculateNewPost() {
+		float newPosX = LAST_PLATFORM_POS_X + minPosX + GlobalRandom.getRandom().nextInt((int)minPosX);
 		LAST_PLATFORM_POS_X = newPosX + getWidth();
 		
-		int segmentPos = Math.max(1, rand.nextInt(6) - 3 + LAST_PLATFORM_ROLL);
-		segmentPos = Math.min(3, segmentPos);
+		int segmentPos = 0;
+		do {
+			segmentPos = Math.max(2, GlobalRandom.getRandom().nextInt(6) - 3 + LAST_PLATFORM_ROLL);
+			segmentPos = Math.min(7, segmentPos);
+		} while(segmentPos == LAST_PLATFORM_ROLL);
 		LAST_PLATFORM_ROLL = segmentPos;
-		//float newPosY = minPosY - rand.nextInt(rangePosY);
 		float newPosY = minPosY - segmentPos * getHeight();
 		setPosition(newPosX, newPosY);
+		
+		Log.d("START", newPosX +" "+ newPosY);
 	}
 	
-	private void addItem() {
-		if(rand.nextFloat() > 0.5f) {
-			if(rand.nextFloat() > 0.5) {
-				AdrenalinTabs tmp = new AdrenalinTabs(assets);
-				tmp.setPosition(getPositionX() + rand.nextInt((int)getWidth()), getRecf().top);
+	private float spawnProp = 0.1f;
+	protected void addItem() {
+		if(GlobalRandom.getRandom().nextFloat() > spawnProp) {
+			if(GlobalRandom.getRandom().nextFloat() > 0.5) {
+				Collectibles tmp;
+				if(GlobalRandom.getRandom().nextFloat() > 0.75) {
+					 tmp = new AdrenalinTabs(assets);
+				} else if(GlobalRandom.getRandom().nextFloat() > 0.5) {
+					tmp = new StopTab(assets);
+				} else if(GlobalRandom.getRandom().nextFloat() > 0.25) {
+					tmp = new JumpTab(assets);
+				} else {
+					tmp = new GoodTabs(assets);
+				}
+				tmp.setPosition(getPositionX() + getWidth()/2 + GlobalRandom.getRandom().nextInt((int)getWidth()/2), getRecf().top);
 				getManager().attach(tmp);
 				getScene().attach(tmp);
 				getCollisionManager().attach(tmp);
 			} else {
 				ObstacleNet tmp = new ObstacleNet(assets);
-				tmp.setPosition(getPositionX() + rand.nextInt((int)getWidth()), getRecf().top);
+				tmp.setPosition(getPositionX() + getWidth()/2 + GlobalRandom.getRandom().nextInt((int)getWidth()/2), getRecf().top);
 				getManager().attach(tmp);
 				getScene().attach(tmp);
 				getCollisionManager().attach(tmp);
 			}
+			spawnProp = 0.1f;
+		} else {
+			spawnProp += 0.2f;
 		}
 	}
 
@@ -142,7 +146,5 @@ public class Platform extends ActorSprite implements ICollidable {
 
 	@Override
 	public void onCollision(ICollidable o) {
-		// TODO Auto-generated method stub
-		
 	}
 }

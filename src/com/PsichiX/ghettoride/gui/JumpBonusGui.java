@@ -6,16 +6,27 @@ import com.PsichiX.XenonCoreDroid.Framework.Graphics.Material;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Text;
 import com.PsichiX.ghettoride.R;
 
-public class NiggaIndicator extends Text {
+public class JumpBonusGui extends Text {
 	
 	public void build(XeAssets assets, float distance) {
 		Font font = (Font)assets.get(R.raw.badaboom_font, Font.class);
 		Material mat = (Material)assets.get(R.raw.badaboom_material, Material.class);
 		
-		build(" " + String.format("%.1f", distance/100f) + "m dist to NIGGA CREW!!!",
+		build("  J_Bns: " + String.format("%.1f", distance),
 				font, mat,
 				Font.Alignment.TOP,
-				Font.Alignment.LEFT,
+				Font.Alignment.RIGHT,
+				1.0f, 1.0f);
+	}
+	
+	public void build(XeAssets assets, int distance) {
+		Font font = (Font)assets.get(R.raw.badaboom_font, Font.class);
+		Material mat = (Material)assets.get(R.raw.badaboom_material, Material.class);
+		
+		build("  J_Bns: " + distance,
+				font, mat,
+				Font.Alignment.TOP,
+				Font.Alignment.RIGHT,
 				1.0f, 1.0f);
 	}
 }

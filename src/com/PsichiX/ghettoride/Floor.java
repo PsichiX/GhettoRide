@@ -14,6 +14,7 @@ public class Floor extends Platform {
 		Camera2D cam = (Camera2D)getScene().getCamera();
 		if(getPositionX() <= cam.getViewPositionX() - 1.5f*cam.getViewWidth()) {
 			setPosition(getPositionX() + 2f*cam.getViewWidth(), getPositionY());
+			addItem();
 		}
 	}
 

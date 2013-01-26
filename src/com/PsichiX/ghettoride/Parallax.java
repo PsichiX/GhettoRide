@@ -88,11 +88,10 @@ public class Parallax
 
 	public void randomizeLayers(float minX, float minY, float maxX, float maxY)
 	{
-		Random rand = new Random(System.currentTimeMillis());
 		for(Layer lr : _layers)
 		{
-			float tx = minX + (rand.nextFloat() * (maxX - minX));
-			float ty = minY + (rand.nextFloat() * (maxY - minY));
+			float tx = minX + (GlobalRandom.getRandom().nextFloat() * (maxX - minX));
+			float ty = minY + (GlobalRandom.getRandom().nextFloat() * (maxY - minY));
 			lr.setPosition(tx, ty);
 		}
 	}

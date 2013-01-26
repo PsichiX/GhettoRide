@@ -5,7 +5,11 @@ import com.PsichiX.XenonCoreDroid.Framework.Graphics.*;
 import com.PsichiX.XenonCoreDroid.Framework.Actors.*;
 import com.PsichiX.XenonCoreDroid.XeSense.EventData;
 import com.PsichiX.XenonCoreDroid.XeUtils.*;
+import com.PsichiX.ghettoride.gui.DistanceTravelled;
+import com.PsichiX.ghettoride.gui.GoodBonusGui;
+import com.PsichiX.ghettoride.gui.JumpBonusGui;
 import com.PsichiX.ghettoride.gui.NiggaIndicator;
+import com.PsichiX.ghettoride.gui.StopBonusGui;
 import com.PsichiX.ghettoride.gui.SyringeBackgroundGui;
 import com.PsichiX.ghettoride.gui.SyringeFrontGui;
 import com.PsichiX.XenonCoreDroid.XeEcho;
@@ -13,10 +17,13 @@ import com.PsichiX.ghettoride.physics.CollisionManager;
 
 public class GameState extends State implements CommandQueue.Delegate
 {
-	///private Camera2D _camGui;
-	//private Scene _scnGui;
 	private SyringeFrontGui _syringeFront;
 	private SyringeBackgroundGui _syringeBackground;
+	private NiggaIndicator _niggaIndicator;
+	private DistanceTravelled _distanceTravelled;
+	private GoodBonusGui _goodBonusGui;
+	private StopBonusGui _stopBonusGui;
+	private JumpBonusGui _jumpBonusGui;
 	
 	private Camera2D _cam;
 	private Scene _scn;
@@ -32,7 +39,6 @@ public class GameState extends State implements CommandQueue.Delegate
 	private FramesSequence _playerAnim = new FramesSequence();
 	private XeEcho.Sound _heartSnd;
 	private NiggaCrew _niggaCrew;
-	private NiggaIndicator _niggaIndicator;
 	
 	@Override
 	public void onEnter()
@@ -44,9 +50,6 @@ public class GameState extends State implements CommandQueue.Delegate
 		
 		_scn = (Scene)getApplication().getAssets().get(R.raw.scene, Scene.class);
 		_cam = (Camera2D)_scn.getCamera();
-		
-		//_scnGui = (Scene)getApplication().getAssets().get(R.raw.scene_gui, Scene.class);
-		//_camGui = (Camera2D)_scnGui.getCamera();
 		
 		_animSheet = (SpriteSheet)getApplication().getAssets().get(R.raw.animations_sheet, SpriteSheet.class);
 		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("player")));
@@ -66,8 +69,7 @@ public class GameState extends State implements CommandQueue.Delegate
 				_cam.getViewPositionX() - _cam.getViewWidth() * 1.0f,
 				_cam.getViewPositionY(),
 				_cam.getViewPositionX() + _cam.getViewWidth() * 1.0f,
-				_cam.getViewPositionY()
-				);
+				_cam.getViewPositionY());
 		
 		_player = new Player(getApplication().getAssets());
 		_player.setAnimation(_playerAnim);
@@ -118,12 +120,35 @@ public class GameState extends State implements CommandQueue.Delegate
 		_scn.attach(_syringeFront);
 		
 		_niggaIndicator = new NiggaIndicator();
-		_niggaIndicator.setPosition(-_cam.getViewWidth()*0.5f, _cam.getViewPositionY(), -1f);
-		_niggaIndicator.build(getApplication().getAssets(), Commons.distanceX(_player, _niggaCrew));
+		_niggaIndicator.setPosition(_cam.getViewPositionX()-_cam.getViewWidth()*0.5f, -_cam.getViewHeight()*0.5f, -1f);
+		_niggaIndicator.build(getApplication().getAssets(), gatNigaDistanceX(_player, _niggaCrew));
 		_scn.attach(_niggaIndicator);
-		_niggaIndicator.build(getApplication().getAssets(), Commons.distanceX(_player, _niggaCrew));
+		
+		_distanceTravelled = new DistanceTravelled();
+		_distanceTravelled.setPosition(_cam.getViewPositionX()-_cam.getViewWidth()*0.5f, -_cam.getViewHeight()*0.5f + _niggaIndicator.getHeight(), -1f);
+		_distanceTravelled.build(getApplication().getAssets(), _player.getDistanceTravelled());
+		_scn.attach(_distanceTravelled);
+		
+		_goodBonusGui = new GoodBonusGui();
+		_goodBonusGui.setPosition(_syringeBackground.getPositionX() + _syringeBackground.getWidth(), -_cam.getViewHeight()*0.5f, -1f);
+		_goodBonusGui.build(getApplication().getAssets(), _player.getGoodBonus());
+		_scn.attach(_goodBonusGui);
+		
+		_stopBonusGui = new StopBonusGui();
+		_stopBonusGui.setPosition(_syringeBackground.getPositionX() + _syringeBackground.getWidth(), -_cam.getViewHeight()*0.5f + _goodBonusGui.getHeight(), -1f);
+		_stopBonusGui.build(getApplication().getAssets(), _player.getStopBonus());
+		_scn.attach(_stopBonusGui);
+		
+		_jumpBonusGui = new JumpBonusGui();
+		_jumpBonusGui.setPosition(_syringeBackground.getPositionX() + _syringeBackground.getWidth(), -_cam.getViewHeight()*0.5f + _goodBonusGui.getHeight()*2, -1f);
+		_jumpBonusGui.build(getApplication().getAssets(), _player.getJumpBonus());
+		_scn.attach(_jumpBonusGui);
 		
 		getApplication().getTimer().reset();
+	}
+	
+	private float gatNigaDistanceX(ActorSprite a, ActorSprite b) {
+		return a.getPositionX() - b.getPositionX() - b.getWidth();
 	}
 	
 	@Override
@@ -158,7 +183,7 @@ public class GameState extends State implements CommandQueue.Delegate
 		_cmds.run();
 		_actors.onUpdate(dt);
 		_collmgr.test();
-		_cam.setViewPosition(_player.getPositionX() + _cam.getViewWidth()*0.25f, 0);
+		_cam.setViewPosition(_player.getPositionX() + _cam.getViewWidth()*0.1f, 0);
 		_parallax.setArea(
 				_cam.getViewPositionX() - _cam.getViewWidth() * 1.0f,
 				_cam.getViewPositionY() - _cam.getViewHeight() * 1.0f,
@@ -195,7 +220,20 @@ public class GameState extends State implements CommandQueue.Delegate
 		_syringeFront.setPosition(_cam.getViewPositionX(), _cam.getViewPositionY()-_cam.getViewHeight()*0.4f);
 		_syringeFront.setSize(_player.getNormPlayerSpeed());
 		
-		_niggaIndicator.setPosition(_cam.getViewPositionX()-_cam.getViewWidth()*0.5f, _cam.getViewPositionY());
-		_niggaIndicator.build(getApplication().getAssets(), Commons.distanceX(_player, _niggaCrew));
+		_niggaIndicator.setPosition(_cam.getViewPositionX()-_cam.getViewWidth()*0.5f, -_cam.getViewHeight()*0.5f);
+		_niggaIndicator.build(getApplication().getAssets(), gatNigaDistanceX(_player, _niggaCrew));
+		
+		_distanceTravelled.setPosition(_cam.getViewPositionX()-_cam.getViewWidth()*0.5f, -_cam.getViewHeight()*0.5f/*4f*/ + _niggaIndicator.getHeight(), -1f);
+		_distanceTravelled.build(getApplication().getAssets(), _player.getDistanceTravelled());
+		
+		_goodBonusGui.setPosition(_syringeBackground.getPositionX() + _syringeBackground.getWidth(), -_cam.getViewHeight()*0.5f, -1f);
+		_goodBonusGui.build(getApplication().getAssets(), _player.getGoodBonus());
+		
+		_stopBonusGui.setPosition(_syringeBackground.getPositionX() + _syringeBackground.getWidth(), -_cam.getViewHeight()*0.5f + _goodBonusGui.getHeight(), -1f);
+		_stopBonusGui.build(getApplication().getAssets(), _player.getStopBonus());
+		
+		_jumpBonusGui.setPosition(_syringeBackground.getPositionX() + _syringeBackground.getWidth(), -_cam.getViewHeight()*0.5f + _goodBonusGui.getHeight()*2, -1f);
+		//_jumpBonusGui.build(getApplication().getAssets(), _player.getJumpBonus());
+		_jumpBonusGui.build(getApplication().getAssets(), getApplication().getPhoton().getDrawCallsCount());
 	}
 }

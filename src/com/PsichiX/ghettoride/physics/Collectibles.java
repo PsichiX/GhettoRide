@@ -1,16 +1,26 @@
 package com.PsichiX.ghettoride.physics;
 
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorSprite;
 import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorsManager;
+import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Material;
 
 public class Collectibles extends ActorSprite implements ICollidable {
 
 	public Collectibles(Material arg0) {
 		super(arg0);
-		
+	}
+	
+	@Override
+	public void onUpdate(float dt) {
+		Camera2D cam = (Camera2D)getScene().getCamera();
+		if(getPositionX() < cam.getViewPositionX() - cam.getViewWidth()*0.5f - getWidth()) {
+			getManager().detach(this);
+			Log.d("del", "delete coll");
+		}
 	}
 
 	private CollisionManager collisionManager;
@@ -48,5 +58,12 @@ public class Collectibles extends ActorSprite implements ICollidable {
 	public void onCollision(ICollidable o) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public void onDetach(ActorsManager arg0) {
+		super.onDetach(arg0);
+		getCollisionManager().detach(this);
+		//getScene().detach(this);
 	}
 }

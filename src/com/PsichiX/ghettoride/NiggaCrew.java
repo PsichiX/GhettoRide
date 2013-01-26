@@ -28,7 +28,7 @@ public class NiggaCrew extends ActorSprite implements ICollidable{
 	@Override
 	public void onUpdate(float dt) {
 		_posX = getPositionX() + NIGGA_CREW_SPEED*dt;
-		setPosition(_posX, getPositionY());
+		setPosition(_posX, getPositionY(), -1f);
 	}
 
 	public void resetSpeed() {

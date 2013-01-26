@@ -2,7 +2,6 @@ package com.PsichiX.ghettoride;
 
 import com.PsichiX.XenonCoreDroid.XeActivity;
 import com.PsichiX.XenonCoreDroid.XeApplication;
-import com.PsichiX.XenonCoreDroid.XeSense;
 import com.PsichiX.XenonCoreDroid.Framework.Utils.Utils;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Graphics;
 
@@ -21,7 +20,6 @@ public class MainActivity extends XeActivity
 		
 		// create application
 		super.onCreate(savedInstanceState);
-		// run state
 		app = getApplicationCore();
 		Utils.initModule(getApplicationCore().getAssets());
 		Graphics.initModule(getApplicationCore().getAssets(), getApplicationCore().getPhoton());
@@ -30,5 +28,13 @@ public class MainActivity extends XeActivity
 		getApplicationCore().getPhoton().getRenderer().setClearBackground(true, 1.0f, 1.0f, 1.0f, 1.0f);
 		getApplicationCore().getPhoton().clearDrawCalls();
 		getApplicationCore().run(new GameState());
+		
+		GlobalRandom.init();
+	}
+	
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		Platform.LAST_PLATFORM_POS_X = 0f;
 	}
 }

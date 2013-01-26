@@ -11,11 +11,13 @@ import com.PsichiX.XenonCoreDroid.Framework.Graphics.Material;
 import com.PsichiX.XenonCoreDroid.XeApplication.Touch;
 import com.PsichiX.XenonCoreDroid.XeApplication.Touches;
 import com.PsichiX.XenonCoreDroid.XeAssets;
-import com.PsichiX.XenonCoreDroid.XeSense.EventData;
 import com.PsichiX.ghettoride.physics.AdrenalinTabs;
 import com.PsichiX.ghettoride.physics.CollisionManager;
+import com.PsichiX.ghettoride.physics.GoodTabs;
 import com.PsichiX.ghettoride.physics.ICollidable;
+import com.PsichiX.ghettoride.physics.JumpTab;
 import com.PsichiX.ghettoride.physics.Obstacle;
+import com.PsichiX.ghettoride.physics.StopTab;
 
 public class Player extends ActorSprite implements ICollidable {
 	private CollisionManager collisionManager;
@@ -27,9 +29,9 @@ public class Player extends ActorSprite implements ICollidable {
 	private float _posX = 0.0f;
 	private float _posY = 0.0f;
 	
-	public static float MAX_SPEED_X = 1000f;
+	public static float MAX_SPEED_X = 500f;//1000f;
 	public static float MIN_SPEED_X = 50f;
-	private float _spdX = 500f;
+	private float _spdX = 250f;//500f;
 	private float _spdY = -50f;
 	private FramesSequence.Animator _animator;
 	
@@ -39,6 +41,10 @@ public class Player extends ActorSprite implements ICollidable {
 	private boolean isRollin = false;
 	
 	private float floorTop = 0f;
+	
+	private float stopBonusTime = 0f;
+	private float goodBonusTime = 0f;
+	private float jumpBonusTime = 0f;
 	
 	public Player(XeAssets assets) {
 		super(null);
@@ -59,6 +65,7 @@ public class Player extends ActorSprite implements ICollidable {
 	private float lastTouchDownX = 0f;
 	private float lastTouchDownY = 0f;
 	
+	private float MIN_INPUT_DIFF = 20f;
 	@Override
 	public void onInput(Touches ev) {
 		Touch touchDown = ev.getTouchByState(Touch.State.DOWN);
@@ -70,6 +77,21 @@ public class Player extends ActorSprite implements ICollidable {
 			lastTouchDownY = worldLoc[1];
 		}
 		
+		Touch touchUp = ev.getTouchByState(Touch.State.IDLE);
+		if(touchUp != null)
+		{
+			Camera2D cam = (Camera2D)getScene().getCamera();
+			float[] worldLoc = cam.convertLocationScreenToWorld(touchUp.getX(), touchUp.getY(), -1f);
+			if(lastTouchDownY != -999f && Math.abs(worldLoc[1] - lastTouchDownY) > MIN_INPUT_DIFF) {
+				if(worldLoc[1] < lastTouchDownY) {
+					jump();
+				} else if(worldLoc[1] > lastTouchDownY) {
+					fall();
+				}
+				lastTouchDownY = -999f;
+			}
+		}
+		/*
 		Touch touchUp = ev.getTouchByState(Touch.State.UP);
 		if(touchUp != null)
 		{
@@ -79,12 +101,12 @@ public class Player extends ActorSprite implements ICollidable {
 				if(worldLoc[1] < lastTouchDownY) {
 					jump();
 				} else if(worldLoc[1] > lastTouchDownY) {
-					//roll();
 					fall();
 				}
 			//}
 			//isTouchDownPlayer = false;
 		}
+		*/
 	}
 	
 	@Override
@@ -110,14 +132,40 @@ public class Player extends ActorSprite implements ICollidable {
 		isOnGround = false;
 		
 		_animator.update(dt, 1.0f);
-		addSpeed(-dt*0.05f*MAX_SPEED_X);
+		if(stopBonusTime == 0f)
+			addSpeed(-dt*0.02f*MAX_SPEED_X);
+		
+		decreaseBonus(dt);
+	}
+	
+	private void decreaseBonus(float dt) {
+		if(stopBonusTime > 0f) {
+			stopBonusTime -= dt;
+			if(stopBonusTime < 0f)
+				stopBonusTime = 0f;
+		}
+		
+		if(goodBonusTime > 0f) {
+			goodBonusTime -= dt;
+			if(goodBonusTime < 0f)
+				goodBonusTime = 0f;
+		}
+		
+		if(jumpBonusTime > 0f) {
+			jumpBonusTime -= dt;
+			if(jumpBonusTime < 0f)
+				jumpBonusTime = 0f;
+		}
 	}
 	
 	private void jump() {
 		if(isOnGround && !isRollin) {
 			isOnGround = false;
-			_spdY = 700f;
-			//Log.d("event", "JUMP");
+			if(jumpBonusTime > 0) {
+				_spdY = 1000f;
+			} else {
+				_spdY = 700f;
+			}
 		}
 	}
 	
@@ -182,13 +230,24 @@ public class Player extends ActorSprite implements ICollidable {
 			if(_histPosY <= _posY && _histPosY <= o.getRecf().top) {
 				touchGround(o.getRecf().top);
 				isOnGround = true;
-				//Log.d("COL", "BOX COLL " + o.getRecf().top);
 			}
 		} else if(o instanceof AdrenalinTabs) {
 			getManager().detach((IActor) o);
+			addSpeed(0.25f*MAX_SPEED_X);
+		} else if(o instanceof StopTab) {
+			getManager().detach((IActor) o);
+			stopBonusTime += 5f;
+			addSpeed(0.1f*MAX_SPEED_X);
+		} else if(o instanceof GoodTabs) {
+			getManager().detach((IActor) o);
+			goodBonusTime += 5f;
+			addSpeed(0.1f*MAX_SPEED_X);
+		} else if(o instanceof JumpTab) {
+			getManager().detach((IActor) o);
+			jumpBonusTime += 5f;
 			addSpeed(0.1f*MAX_SPEED_X);
 		} else if(o instanceof Obstacle) {
-			if(((Obstacle)o).inactiv())
+			if(((Obstacle)o).inactiv() && goodBonusTime == 0f)
 				addSpeed(-0.1f*MAX_SPEED_X);
 		} else if(o instanceof NiggaCrew) {
 			resetSpeed();
@@ -210,5 +269,21 @@ public class Player extends ActorSprite implements ICollidable {
 	
 	public float getNormPlayerSpeed() {
 		return _spdX/MAX_SPEED_X;
+	}
+	
+	public float getDistanceTravelled() {
+		return _distanceTraveled;
+	}
+	
+	public float getStopBonus() {
+		return stopBonusTime;
+	}
+	
+	public float getGoodBonus() {
+		return goodBonusTime;
+	}
+	
+	public float getJumpBonus() {
+		return jumpBonusTime;
 	}
 }
