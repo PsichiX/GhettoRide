@@ -53,40 +53,6 @@ public class Player extends ActorSprite implements ICollidable {
 		_animator.setOwner(anim);
 	}
 	
-	@Override
-	public void onSensor(EventData ev) {
-		/*
-		if(ev.type == XeSense.Type.ACCELEROMETER) {
-			ev.owner.remapCoords(ev.values, 1, 0);
-			float[] v = MathHelper.vecNormalize(ev.values[0], ev.values[1], ev.values[2]);
-			
-			//_movX = Math.max(-0.2f, Math.min(0.2f, v[0])) * 5.0f;
-			//_movY = Math.max(-0.2f, Math.min(0.2f, v[1])) * 5.0f;
-			float Y = v[1];
-			if(lastY == 0f)
-				lastY = v[1];
-			float diff = Y - lastY;
-			
-			float BORDER = 0.6f;
-			
-			if(Math.abs(diff) > BORDER)
-				//Log.d("event", "border: " + diff + " " + Y + " " + lastY);
-			
-			if(diff > BORDER && isOnGround) {
-				isOnGround = false;
-				_spdY = 100f;
-				//Log.d("event", "JUMP");
-			}
-			lastY = Y;
-			
-			//Log.d("event", "acc: " + String.format("%.2f", Y) + " diff " + String.format("%.2f", diff));
-			
-			//Log.d("event", "acc: " + String.format("%.2f", Y) + " diff " + String.format("%.2f", diff));
-			//Log.d("event", "acc: " + String.format("%.2f", ev.values[0]) + " diff " + String.format("%.2f", ev.values[1]));
-		}
-		*/
-	}
-	
 	private boolean isTouchDownPlayer = false;
 	private float lastTouchDownX = 0f;
 	private float lastTouchDownY = 0f;
@@ -98,11 +64,8 @@ public class Player extends ActorSprite implements ICollidable {
 		{
 			Camera2D cam = (Camera2D)getScene().getCamera();
 			float[] worldLoc = cam.convertLocationScreenToWorld(touchDown.getX(), touchDown.getY(), -1f);
-			if(Commons.containst(worldLoc[0], worldLoc[1], this)) {
-				isTouchDownPlayer = true;
-				lastTouchDownX = worldLoc[0];
-				lastTouchDownY = worldLoc[1];
-			}
+			lastTouchDownX = worldLoc[0];
+			lastTouchDownY = worldLoc[1];
 		}
 		
 		Touch touchUp = ev.getTouchByState(Touch.State.UP);
@@ -110,13 +73,10 @@ public class Player extends ActorSprite implements ICollidable {
 		{
 			Camera2D cam = (Camera2D)getScene().getCamera();
 			float[] worldLoc = cam.convertLocationScreenToWorld(touchUp.getX(), touchUp.getY(), -1f);
-			if(isTouchDownPlayer) {
-				if(worldLoc[1] < lastTouchDownY) {
-					jump();
-				} else if(worldLoc[1] > lastTouchDownY) {
-					//roll();
-					fall();
-				}
+			if(worldLoc[1] < lastTouchDownY) {
+				jump();
+			} else if(worldLoc[1] > lastTouchDownY) {
+				fall();
 			}
 			isTouchDownPlayer = false;
 		}
@@ -143,7 +103,7 @@ public class Player extends ActorSprite implements ICollidable {
 		isOnGround = false;
 		
 		_animator.update(dt, 1.0f);
-		addSpeed(-dt*0.01f*MAX_SPEED_X);
+		addSpeed(-dt*0.05f*MAX_SPEED_X);
 	}
 	
 	private void jump() {

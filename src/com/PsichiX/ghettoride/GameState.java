@@ -55,9 +55,9 @@ public class GameState extends State implements CommandQueue.Delegate
 		_parallax.setScene(_scn);
 		_parallaxBg = new Parallax.Layer(_bgSheet.getSubImage("bg"), 0.0f, 0.0f, true);
 		_parallax.addLayer(_parallaxBg);
-		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane2"), -100.0f, 0.0f, false));
-		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane3"), -40.0f, 0.0f, false));
-		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane4"), -10.0f, 0.0f, false));
+		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane2"), 100.0f, 0.0f, false));
+		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane3"), 250.0f, 0.0f, false));
+		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane4"), 750.0f, 0.0f, false));
 		_parallax.randomizeLayers(
 				_cam.getViewPositionX() - _cam.getViewWidth() * 1.0f,
 				_cam.getViewPositionY(),
@@ -149,10 +149,13 @@ public class GameState extends State implements CommandQueue.Delegate
 				_cam.getViewWidth() * 2.0f,
 		 		_cam.getViewHeight() * 2.0f
 				);
-		_parallax.onUpdate(dt);
+		_parallax.onUpdate(dt, _player.getNormPlayerSpeed());
 		_parallaxBg.setPosition(_cam.getViewPositionX(), _cam.getViewPositionY());
 		_parallaxBg.setSize(_cam.getViewWidth(), _cam.getViewHeight());
 		_parallaxBg.setOffsetFromSize(0.5f, 0.5f);
+		_heartSnd.setSpeed(0.5f + (_player.getNormPlayerSpeed() * 1.5f));
+		float vol = 0.25f + ((1.0f - _player.getNormPlayerSpeed()) * 0.5f);
+		_heartSnd.setVolume(vol, vol);
 		
 		updataGUI();
 		

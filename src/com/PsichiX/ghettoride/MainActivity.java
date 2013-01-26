@@ -18,7 +18,6 @@ public class MainActivity extends XeActivity
 		XeApplication.SETUP_WINDOW_HAS_TITLE = false;
 		XeApplication.SETUP_WINDOW_FULLSCREEN = true;
 		XeApplication.SETUP_SCREEN_ORIENTATION = XeApplication.Orientation.LANDSCAPE;
-		//XeApplication.SETUP_SENSORS_RATE = android.hardware.SensorManager.SENSOR_DELAY_GAME;
 		
 		// create application
 		super.onCreate(savedInstanceState);
@@ -30,7 +29,6 @@ public class MainActivity extends XeActivity
 		getApplicationCore().getPhoton().getRenderer().getTimer().setFixedStep(1000 / 30);
 		getApplicationCore().getPhoton().getRenderer().setClearBackground(true, 1.0f, 1.0f, 1.0f, 1.0f);
 		getApplicationCore().getPhoton().clearDrawCalls();
-		//getApplicationCore().getSense().use(XeSense.Type.GRAVITY);
 		getApplicationCore().run(new GameState());
 	}
 }

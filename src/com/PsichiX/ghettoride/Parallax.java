@@ -54,14 +54,14 @@ public class Parallax
 		}
 	}
 	
-	public void onUpdate(float dt)
+	public void onUpdate(float dt, float factor)
 	{
 		for(Layer lr : _layers)
 		{
 			if(!lr._static)
 			{
-				float tx = lr.getPositionX() + (lr._spdX * dt);
-				float ty = lr.getPositionY() + (lr._spdY * dt);
+				float tx = lr.getPositionX() + (lr._spdX * dt * factor);
+				float ty = lr.getPositionY() + (lr._spdY * dt * factor);
 				tx = Commons.modulo(tx, _areaX, _areaX + _areaW);
 				ty = Commons.modulo(ty, _areaY, _areaY + _areaH);
 				lr.setPosition(tx, ty);
