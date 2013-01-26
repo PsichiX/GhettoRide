@@ -39,10 +39,20 @@ public class GameState extends State implements CommandQueue.Delegate
 	private FramesSequence _playerAnim = new FramesSequence();
 	private XeEcho.Sound _heartSnd;
 	private NiggaCrew _niggaCrew;
+	private Theme _theme;
+	private int _themeId = 0;
+	
+	public GameState(int themeId)
+	{
+		super();
+		_themeId = themeId;
+	}
 	
 	@Override
 	public void onEnter()
 	{
+		_theme = (Theme)getApplication().getAssets().get(_themeId, Theme.class);
+		
 		_cmds.setDelegate(this);
 		
 		_heartSnd = getApplication().getEcho().loadSound("heart", R.raw.heartbeat);
@@ -51,13 +61,13 @@ public class GameState extends State implements CommandQueue.Delegate
 		_scn = (Scene)getApplication().getAssets().get(R.raw.scene, Scene.class);
 		_cam = (Camera2D)_scn.getCamera();
 		
-		_animSheet = (SpriteSheet)getApplication().getAssets().get(R.raw.animations_sheet, SpriteSheet.class);
+		_animSheet = (SpriteSheet)_theme.getAsset("animations", SpriteSheet.class);
 		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("player")));
 		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("player1")));
 		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("player2")));
 		_playerAnim.setDelay(0.5f);
 		
-		_bgSheet = (SpriteSheet)getApplication().getAssets().get(R.raw.background_sheet, SpriteSheet.class);
+		_bgSheet = (SpriteSheet)_theme.getAsset("backgrounds", SpriteSheet.class);
 		_parallax = new Parallax();
 		_parallax.setScene(_scn);
 		_parallaxBg = new Parallax.Layer(_bgSheet.getSubImage("bg"), 0.0f, 0.0f, true);
@@ -77,7 +87,7 @@ public class GameState extends State implements CommandQueue.Delegate
 		_player.setPosition(0, 0, -1);
 		
 		for(int i=0; i<5; i++) {
-			Platform tmp = new Platform(getApplication().getAssets());
+			Platform tmp = new Platform(_theme);
 			_collmgr.attach(tmp);
 			_actors.attach(tmp);
 			_scn.attach(tmp);
@@ -85,12 +95,12 @@ public class GameState extends State implements CommandQueue.Delegate
 			tmp.calculateStartPos();
 		}
 		
-		Floor floor1 = new Floor(getApplication().getAssets());
+		Floor floor1 = new Floor(_theme);
 		floor1.setSize(_cam.getViewWidth(), _cam.getViewHeight()*0.1f);
 		floor1.setPosition(-_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.5f);
 		floor1.onAttach(_collmgr);
 		
-		Floor floor2 = new Floor(getApplication().getAssets());
+		Floor floor2 = new Floor(_theme);
 		floor2.setSize(_cam.getViewWidth(), _cam.getViewHeight()*0.1f);
 		floor2.setPosition(_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.5f);
 		floor2.onAttach(_collmgr);
@@ -111,7 +121,7 @@ public class GameState extends State implements CommandQueue.Delegate
 		_scn.attach(floor1);
 		_scn.attach(floor2);
 		
-		_syringeBackground = new SyringeBackgroundGui(getApplication().getAssets());
+		_syringeBackground = new SyringeBackgroundGui(_theme);
 		_syringeBackground.setPosition(_cam.getViewPositionX(), -_cam.getViewHeight()*0.4f, -1f);
 		_scn.attach(_syringeBackground);
 		

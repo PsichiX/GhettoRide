@@ -23,18 +23,13 @@ public class MainActivity extends XeActivity
 		app = getApplicationCore();
 		Utils.initModule(getApplicationCore().getAssets());
 		Graphics.initModule(getApplicationCore().getAssets(), getApplicationCore().getPhoton());
+		getApplicationCore().getAssets().registerClass(Theme.class);
 		getApplicationCore().getTimer().setFixedStep(1000 / 25);
 		getApplicationCore().getPhoton().getRenderer().getTimer().setFixedStep(1000 / 30);
 		getApplicationCore().getPhoton().getRenderer().setClearBackground(true, 1.0f, 1.0f, 1.0f, 1.0f);
 		getApplicationCore().getPhoton().clearDrawCalls();
-		getApplicationCore().run(new GameState());
+		getApplicationCore().run(new GameState(R.raw.default_theme));
 		
 		GlobalRandom.init();
-	}
-	
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-		Platform.LAST_PLATFORM_POS_X = 0f;
 	}
 }

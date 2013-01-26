@@ -5,8 +5,8 @@ import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
 
 public class Floor extends Platform {
 
-	public Floor(XeAssets assets) {
-		super(assets);
+	public Floor(Theme theme) {
+		super(theme);
 	}
 	
 	@Override

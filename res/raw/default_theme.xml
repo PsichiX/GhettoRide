@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Theme>
+    <Asset name="animations" id="raw/animations_sheet" />
+    <Asset name="backgrounds" id="raw/background_sheet" />
+</Theme>
