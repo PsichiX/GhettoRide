@@ -14,6 +14,7 @@ import com.PsichiX.ghettoride.gui.SyringeBackgroundGui;
 import com.PsichiX.ghettoride.gui.SyringeFrontGui;
 import com.PsichiX.XenonCoreDroid.XeEcho;
 import com.PsichiX.ghettoride.physics.CollisionManager;
+import com.PsichiX.ghettoride.resultmenu.ResultMenuState;
 
 public class GameState extends State implements CommandQueue.Delegate
 {
@@ -107,6 +108,7 @@ public class GameState extends State implements CommandQueue.Delegate
 		
 		_niggaCrew = new NiggaCrew(getApplication().getAssets());
 		_niggaCrew.setPosition(_cam.getViewPositionX() - _cam.getViewWidth(), floor1.getRecf().top);
+		_niggaCrew.setPlayer(_player);
 		_actors.attach(_niggaCrew);
 		_collmgr.attach(_niggaCrew);
 		_scn.attach(_niggaCrew);
@@ -131,7 +133,7 @@ public class GameState extends State implements CommandQueue.Delegate
 		
 		_niggaIndicator = new NiggaIndicator();
 		_niggaIndicator.setPosition(_cam.getViewPositionX()-_cam.getViewWidth()*0.5f, -_cam.getViewHeight()*0.5f, -1f);
-		_niggaIndicator.build(getApplication().getAssets(), gatNigaDistanceX(_player, _niggaCrew));
+		_niggaIndicator.build(getApplication().getAssets(), getNiggaDistanceX(_player, _niggaCrew));
 		_scn.attach(_niggaIndicator);
 		
 		_distanceTravelled = new DistanceTravelled();
@@ -157,13 +159,14 @@ public class GameState extends State implements CommandQueue.Delegate
 		getApplication().getTimer().reset();
 	}
 	
-	private float gatNigaDistanceX(ActorSprite a, ActorSprite b) {
+	private float getNiggaDistanceX(ActorSprite a, ActorSprite b) {
 		return a.getPositionX() - b.getPositionX() - b.getWidth();
 	}
 	
 	@Override
 	public void onExit()
 	{
+		Platform.LAST_PLATFORM_POS_X = 0f;
 		_scn.detachAll();
 		_actors.detachAll();
 		_heartSnd.stop();
@@ -213,7 +216,10 @@ public class GameState extends State implements CommandQueue.Delegate
 		_scn.sort(_sorter);
 		_scn.update(dt);
 		
-		//_scnGui.update(dt);
+		if(!_player.isAlive()) {
+			getApplication().popState();
+			getApplication().pushState(new ResultMenuState(_player.getDistanceTravelled()));
+		}
 	}
 	
 	public void onCommand(Object sender, String cmd, Object data)
@@ -231,7 +237,7 @@ public class GameState extends State implements CommandQueue.Delegate
 		_syringeFront.setSize(_player.getNormPlayerSpeed());
 		
 		_niggaIndicator.setPosition(_cam.getViewPositionX()-_cam.getViewWidth()*0.5f, -_cam.getViewHeight()*0.5f);
-		_niggaIndicator.build(getApplication().getAssets(), gatNigaDistanceX(_player, _niggaCrew));
+		_niggaIndicator.build(getApplication().getAssets(), getNiggaDistanceX(_player, _niggaCrew));
 		
 		_distanceTravelled.setPosition(_cam.getViewPositionX()-_cam.getViewWidth()*0.5f, -_cam.getViewHeight()*0.5f/*4f*/ + _niggaIndicator.getHeight(), -1f);
 		_distanceTravelled.build(getApplication().getAssets(), _player.getDistanceTravelled());

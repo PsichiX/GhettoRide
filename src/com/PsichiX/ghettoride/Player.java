@@ -12,6 +12,7 @@ import com.PsichiX.XenonCoreDroid.XeApplication.Touch;
 import com.PsichiX.XenonCoreDroid.XeApplication.Touches;
 import com.PsichiX.XenonCoreDroid.XeAssets;
 import com.PsichiX.ghettoride.physics.AdrenalinTabs;
+import com.PsichiX.ghettoride.physics.Bullet;
 import com.PsichiX.ghettoride.physics.CollisionManager;
 import com.PsichiX.ghettoride.physics.GoodTabs;
 import com.PsichiX.ghettoride.physics.ICollidable;
@@ -23,6 +24,8 @@ public class Player extends ActorSprite implements ICollidable {
 	private CollisionManager collisionManager;
 	
 	private float _distanceTraveled = 0f;
+	
+	private boolean isAlive = true;
 	
 	private float _histPosX = 0f;
 	private float _histPosY = 0f;
@@ -249,9 +252,13 @@ public class Player extends ActorSprite implements ICollidable {
 		} else if(o instanceof Obstacle) {
 			if(((Obstacle)o).inactiv() && goodBonusTime == 0f)
 				addSpeed(-0.1f*MAX_SPEED_X);
+		} else if(o instanceof Bullet) {
+			getManager().detach((IActor) o);
+			addSpeed(-0.01f*MAX_SPEED_X);
 		} else if(o instanceof NiggaCrew) {
 			resetSpeed();
 			((NiggaCrew)o).resetSpeed();
+			isAlive = false;
 		} 
 	}
 	
@@ -285,5 +292,9 @@ public class Player extends ActorSprite implements ICollidable {
 	
 	public float getJumpBonus() {
 		return jumpBonusTime;
+	}
+	
+	public boolean isAlive() {
+		return isAlive;
 	}
 }
