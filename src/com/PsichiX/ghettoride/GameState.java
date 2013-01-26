@@ -4,9 +4,9 @@ import com.PsichiX.XenonCoreDroid.XeApplication.*;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.*;
 import com.PsichiX.XenonCoreDroid.Framework.Actors.*;
 import com.PsichiX.XenonCoreDroid.XeSense.EventData;
-import com.PsichiX.XenonCoreDroid.XeUtils.*;
-import com.PsichiX.ghettoride.gui.SyringeBackgroundGui;
+import com.PsichiX.XenonCoreDroid.XeUtils.*;import com.PsichiX.ghettoride.gui.SyringeBackgroundGui;
 import com.PsichiX.ghettoride.gui.SyringeFrontGui;
+import com.PsichiX.XenonCoreDroid.XeEcho;
 import com.PsichiX.ghettoride.physics.CollisionManager;
 
 public class GameState extends State implements CommandQueue.Delegate
@@ -28,11 +28,15 @@ public class GameState extends State implements CommandQueue.Delegate
 	private Player _player;
 	private SpriteSheet _animSheet;
 	private FramesSequence _playerAnim = new FramesSequence();
+	private XeEcho.Sound _heartSnd;
 	
 	@Override
 	public void onEnter()
 	{
 		_cmds.setDelegate(this);
+		
+		_heartSnd = getApplication().getEcho().loadSound("heart", R.raw.heartbeat);
+		_cmds.queueCommand(this, "PlayBeat", null);
 		
 		_scn = (Scene)getApplication().getAssets().get(R.raw.scene, Scene.class);
 		_cam = (Camera2D)_scn.getCamera();
@@ -111,6 +115,8 @@ public class GameState extends State implements CommandQueue.Delegate
 	{
 		_scn.detachAll();
 		_actors.detachAll();
+		_heartSnd.stop();
+		getApplication().getEcho().unloadAll();
 	}
 	
 	@Override
@@ -158,7 +164,10 @@ public class GameState extends State implements CommandQueue.Delegate
 	
 	public void onCommand(Object sender, String cmd, Object data)
 	{
-		
+		if(cmd.equals("PlayBeat"))
+		{
+			_heartSnd.play(0.5f, 0.5f, true, 1.0f);
+		}
 	}
 	
 	private void updataGUI() {

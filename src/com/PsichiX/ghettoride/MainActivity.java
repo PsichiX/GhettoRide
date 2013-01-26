@@ -14,11 +14,11 @@ public class MainActivity extends XeActivity
 	public void onCreate(android.os.Bundle savedInstanceState) 
 	{
 		// setup application before running it
-		XeApplication.SETUP_SOUND_STREAMS = 4;
+		XeApplication.SETUP_SOUND_STREAMS = 16;
 		XeApplication.SETUP_WINDOW_HAS_TITLE = false;
 		XeApplication.SETUP_WINDOW_FULLSCREEN = true;
 		XeApplication.SETUP_SCREEN_ORIENTATION = XeApplication.Orientation.LANDSCAPE;
-		XeApplication.SETUP_SENSORS_RATE = android.hardware.SensorManager.SENSOR_DELAY_GAME;
+		//XeApplication.SETUP_SENSORS_RATE = android.hardware.SensorManager.SENSOR_DELAY_GAME;
 		
 		// create application
 		super.onCreate(savedInstanceState);
@@ -30,7 +30,7 @@ public class MainActivity extends XeActivity
 		getApplicationCore().getPhoton().getRenderer().getTimer().setFixedStep(1000 / 30);
 		getApplicationCore().getPhoton().getRenderer().setClearBackground(true, 1.0f, 1.0f, 1.0f, 1.0f);
 		getApplicationCore().getPhoton().clearDrawCalls();
-		getApplicationCore().getSense().use(XeSense.Type.GRAVITY);
+		//getApplicationCore().getSense().use(XeSense.Type.GRAVITY);
 		getApplicationCore().run(new GameState());
 	}
 }
