@@ -83,6 +83,8 @@ public class GameState extends State implements CommandQueue.Delegate
 		_scn.attach(floor2);
 		
 		//box.calculate();
+		
+		getApplication().getTimer().reset();
 	}
 	
 	@Override
