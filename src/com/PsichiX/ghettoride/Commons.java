@@ -1,6 +1,5 @@
 package com.PsichiX.ghettoride;
 
-import com.PsichiX.XenonCoreDroid.Framework.Graphics.IRenderable;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Shape;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Sprite;
 

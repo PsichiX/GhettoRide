@@ -33,7 +33,6 @@ public class CollisionManager
 	
 	public void test()
 	{
-		float len = 0.0f;
 		for(ICollidable a : _colls)
 		{
 			for(ICollidable b : _colls)

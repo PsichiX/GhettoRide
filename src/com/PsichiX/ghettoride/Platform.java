@@ -3,7 +3,6 @@ package com.PsichiX.ghettoride;
 import android.graphics.RectF;
 import android.util.Log;
 
-import com.PsichiX.XenonCoreDroid.XeAssets;
 import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorSprite;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Image;

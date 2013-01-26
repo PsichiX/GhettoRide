@@ -1,6 +1,5 @@
 package com.PsichiX.ghettoride;
 
-import com.PsichiX.XenonCoreDroid.XeAssets;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
 
 public class Floor extends Platform {

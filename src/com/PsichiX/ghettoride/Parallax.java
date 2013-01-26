@@ -1,9 +1,7 @@
 package com.PsichiX.ghettoride;
 
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.*;
-import com.PsichiX.XenonCoreDroid.XeUtils.*;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Parallax
 {

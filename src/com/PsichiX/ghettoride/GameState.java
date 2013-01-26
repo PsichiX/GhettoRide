@@ -187,8 +187,6 @@ public class GameState extends State implements CommandQueue.Delegate
 	@Override
 	public void onUpdate()
 	{
-		getApplication().getSense().setCoordsOrientation(-1);
-		
 		float dt = getApplication().getTimer().getDeltaTime() * 0.001f;
 		//float dt = 1.0f / 30.0f;
 		

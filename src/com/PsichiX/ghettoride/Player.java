@@ -27,7 +27,6 @@ public class Player extends ActorSprite implements ICollidable {
 	
 	private boolean isAlive = true;
 	
-	private float _histPosX = 0f;
 	private float _histPosY = 0f;
 	private float _posX = 0.0f;
 	private float _posY = 0.0f;
@@ -37,8 +36,6 @@ public class Player extends ActorSprite implements ICollidable {
 	private float _spdX = 250f;//500f;
 	private float _spdY = -50f;
 	private FramesSequence.Animator _animator;
-	
-	private float lastY = 0f;
 	
 	private boolean isOnGround = false;
 	private boolean isRollin = false;
@@ -64,8 +61,6 @@ public class Player extends ActorSprite implements ICollidable {
 		_animator.setOwner(anim);
 	}
 	
-	private boolean isTouchDownPlayer = false;
-	private float lastTouchDownX = 0f;
 	private float lastTouchDownY = 0f;
 	
 	private float MIN_INPUT_DIFF = 20f;
@@ -76,7 +71,6 @@ public class Player extends ActorSprite implements ICollidable {
 		{
 			Camera2D cam = (Camera2D)getScene().getCamera();
 			float[] worldLoc = cam.convertLocationScreenToWorld(touchDown.getX(), touchDown.getY(), -1f);
-			lastTouchDownX = worldLoc[0];
 			lastTouchDownY = worldLoc[1];
 		}
 		
@@ -115,10 +109,6 @@ public class Player extends ActorSprite implements ICollidable {
 	@Override
 	public void onUpdate(float dt)
 	{
-		/*Camera2D cam = (Camera2D)getScene().getCamera();
-		float w = cam.getViewWidth() * 0.5f;
-		float h = cam.getViewHeight() * 0.5f;*/
-		_histPosX = _posX;
 		_histPosY = _posY;
 		
 		_distanceTraveled += _spdX * dt;

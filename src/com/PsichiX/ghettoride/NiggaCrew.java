@@ -4,7 +4,6 @@ import android.graphics.RectF;
 
 import com.PsichiX.XenonCoreDroid.XeAssets;
 import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorSprite;
-import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Image;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Material;
 import com.PsichiX.ghettoride.physics.Bullet;
@@ -43,7 +42,7 @@ public class NiggaCrew extends ActorSprite implements ICollidable{
 		setPosition(_posX, getPositionY(), -1f);
 		
 		lastShootTime += dt;
-		Camera2D cam = (Camera2D)getScene().getCamera();
+		getScene().getCamera();
 		//if(getPositionX() + getWidth() > cam.getViewPositionX() - cam.getViewWidth()*0.5f) {
 			if(lastShootTime > SHOOOT_INTERVAL) {
 				Bullet bullet = new Bullet(assets);

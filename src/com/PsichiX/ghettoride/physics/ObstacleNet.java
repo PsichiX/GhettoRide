@@ -1,6 +1,5 @@
 package com.PsichiX.ghettoride.physics;
 
-import com.PsichiX.XenonCoreDroid.XeAssets;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Image;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Material;
 import com.PsichiX.ghettoride.R;

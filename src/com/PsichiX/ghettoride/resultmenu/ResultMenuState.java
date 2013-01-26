@@ -15,11 +15,8 @@ public class ResultMenuState extends State {
 	
 	private ActorsManager _actormgr = new ActorsManager();
 	
-	private float distanceTravelled;
-	
 	public ResultMenuState(float distanceTravelled) {
 		super();
-		this.distanceTravelled = distanceTravelled;
 	}
 	
 	@Override
