@@ -64,7 +64,8 @@ public class GameState extends State implements CommandQueue.Delegate
 		//Platform[] list = new Platform[10];
 		for(int i=0; i<5; i++) {
 			Platform tmp = new Platform(getApplication().getAssets());
-			tmp.onAttach(_collmgr);
+			//tmp.onAttach(_collmgr);
+			_collmgr.attach(tmp);
 			//tmp.setPosition(i*tmp.getWidth()*2, -50);
 			//tmp.calculateStartPos();
 			_actors.attach(tmp);
@@ -82,6 +83,8 @@ public class GameState extends State implements CommandQueue.Delegate
 		floor2.setSize(_cam.getViewWidth(), _cam.getViewHeight()*0.1f);
 		floor2.setPosition(_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.5f);
 		floor2.onAttach(_collmgr);
+		
+		_player.setFloorTop(floor1.getRecf().top);
 		
 		_actors.attach(_player);
 		_actors.attach(floor1);

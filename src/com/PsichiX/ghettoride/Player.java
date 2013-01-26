@@ -4,6 +4,7 @@ import android.graphics.RectF;
 import android.util.Log;
 
 import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorSprite;
+import com.PsichiX.XenonCoreDroid.Framework.Actors.IActor;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Image;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Material;
@@ -11,6 +12,7 @@ import com.PsichiX.XenonCoreDroid.XeApplication.Touch;
 import com.PsichiX.XenonCoreDroid.XeApplication.Touches;
 import com.PsichiX.XenonCoreDroid.XeAssets;
 import com.PsichiX.XenonCoreDroid.XeSense.EventData;
+import com.PsichiX.ghettoride.physics.AdrenalinTabs;
 import com.PsichiX.ghettoride.physics.CollisionManager;
 import com.PsichiX.ghettoride.physics.ICollidable;
 
@@ -29,6 +31,8 @@ public class Player extends ActorSprite implements ICollidable {
 	
 	private boolean isOnGround = false;// true;
 	private boolean isRollin = false;
+	
+	private float floorTop = 0f;
 	
 	public Player(XeAssets assets) {
 		super(null);
@@ -106,7 +110,8 @@ public class Player extends ActorSprite implements ICollidable {
 				if(worldLoc[1] < lastTouchDownY) {
 					jump();
 				} else if(worldLoc[1] > lastTouchDownY) {
-					roll();
+					//roll();
+					fall();
 				}
 			}
 			isTouchDownPlayer = false;
@@ -128,10 +133,10 @@ public class Player extends ActorSprite implements ICollidable {
 		if(!isOnGround) {
 			flying(dt);
 		}
-		
+		/*
 		if(isRollin) {
 			rolling(dt);
-		}
+		}*/
 		
 		setPosition(_posX, _posY);
 		
@@ -156,6 +161,15 @@ public class Player extends ActorSprite implements ICollidable {
 		}
 	}
 	
+	private void fall() {
+		Log.d("event", "fall " + isOnGround + " " +  _posY + " " + floorTop);
+		if(isOnGround && _posY != floorTop) {
+			_posY += 0.1f;
+			_histPosY = _posY;
+			isOnGround = false;
+		}
+	}
+	
 	private void flying(float dt) {
 		/*if(_posY > 0) {
 			touchGround(0f);
@@ -170,6 +184,10 @@ public class Player extends ActorSprite implements ICollidable {
 		_spdY = -10f;
 		
 		setPosition(_posX, _posY);
+	}
+	
+	public void setFloorTop(float floorTop) {
+		this.floorTop = floorTop;
 	}
 	
 	private float rollingTime = 0f;
@@ -221,6 +239,8 @@ public class Player extends ActorSprite implements ICollidable {
 				isOnGround = true;
 				//Log.d("COL", "BOX COLL " + o.getRecf().top);
 			}
+		} else if(o instanceof AdrenalinTabs) {
+			getManager().detach((IActor) o);
 		}
 	}
 }

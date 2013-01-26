@@ -9,6 +9,7 @@ import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorSprite;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Image;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Material;
+import com.PsichiX.ghettoride.physics.AdrenalinTabs;
 import com.PsichiX.ghettoride.physics.CollisionManager;
 import com.PsichiX.ghettoride.physics.ICollidable;
 
@@ -18,9 +19,11 @@ public class Platform extends ActorSprite implements ICollidable {
 	
 	private CollisionManager collisionManager;
 	private Random rand;
+	private XeAssets assets;
 	
 	public Platform(XeAssets assets) {
 		super(null);
+		this.assets = assets;
 		Material mat = (Material)assets.get(R.raw.box_material, Material.class);
 		Image img = (Image)assets.get(R.drawable.box, Image.class);
 		setMaterial(mat);
@@ -55,28 +58,43 @@ public class Platform extends ActorSprite implements ICollidable {
 		Camera2D cam = (Camera2D)getScene().getCamera();
 		if(getPositionX() == 0 && getPositionY() == 0) {
 			calculateNewPost();//cam);
+			addCollectiables();
 			return;
 		}
 		
 		if(getPositionX() < cam.getViewPositionX() - cam.getViewWidth()*0.5f - getWidth()) {
 			calculateNewPost();//cam);
+			addCollectiables();
 		}
 	}
 	
 	public void calculateStartPos() {
 		calculateNewPost();
+		//addCollectiables();
 	}
 	
 	private void calculateNewPost(/*Camera2D cam*/) {
 		float newPosX = /*cam.getViewPositionX()*/ LAST_PLATFORM_POS_X + minPosX + rand.nextInt((int)minPosX);
 		LAST_PLATFORM_POS_X = newPosX + getWidth();
 		
-		int segmentPos = Math.max(1, rand.nextInt(6) - 2 + LAST_PLATFORM_ROLL);
-		segmentPos = Math.min(7, segmentPos);
+		int segmentPos = Math.max(1, rand.nextInt(6) - 3 + LAST_PLATFORM_ROLL);
+		segmentPos = Math.min(3, segmentPos);
 		LAST_PLATFORM_ROLL = segmentPos;
 		//float newPosY = minPosY - rand.nextInt(rangePosY);
 		float newPosY = minPosY - segmentPos * getHeight();
 		setPosition(newPosX, newPosY);
+	}
+	
+	private void addCollectiables() {
+		if(rand.nextFloat() > 0.7f) {
+			if(rand.nextFloat() > 0.5) {
+				AdrenalinTabs tab = new AdrenalinTabs(assets);
+				tab.setPosition(getPositionX() + rand.nextInt((int)getWidth()), getRecf().top);
+				getManager().attach(tab);
+				getScene().attach(tab);
+				getCollisionManager().attach(tab);
+			}
+		}
 	}
 
 	@Override
