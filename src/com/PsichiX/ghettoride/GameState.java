@@ -1,12 +1,11 @@
 package com.PsichiX.ghettoride;
 
-import android.util.Log;
-
 import com.PsichiX.XenonCoreDroid.XeApplication.*;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.*;
 import com.PsichiX.XenonCoreDroid.Framework.Actors.*;
 import com.PsichiX.XenonCoreDroid.XeSense.EventData;
 import com.PsichiX.XenonCoreDroid.XeUtils.*;
+import com.PsichiX.ghettoride.physics.CollisionManager;
 
 public class GameState extends State implements CommandQueue.Delegate
 {
@@ -18,6 +17,9 @@ public class GameState extends State implements CommandQueue.Delegate
 	private Sprite _bg;
 	private Sprite _parallax[] = new Sprite[6];
 	private SpriteSheet _bgSheet;
+
+	private CollisionManager _collmgr = new CollisionManager();
+	private Player _player;
 	
 	@Override
 	public void onEnter()
@@ -32,6 +34,24 @@ public class GameState extends State implements CommandQueue.Delegate
 		_bgSheet.getSubImage("bg").apply(_bg);
 		_bg.setOffsetFromSize(0.5f, 0.5f);
 		_scn.attach(_bg);
+
+		_player = new Player(getApplication().getAssets());
+		_player.onAttach(_collmgr);
+		_player.setPosition(0, 0, -1);
+		
+		Platform box = new Platform(getApplication().getAssets());
+		box.onAttach(_collmgr);
+		box.setPosition(20, -50);
+		
+		Platform floor = new Platform(getApplication().getAssets());
+		floor.setSize(_cam.getViewWidth(), _cam.getViewHeight()*0.1f);
+		floor.setPosition(-_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.5f);
+		floor.onAttach(_collmgr);
+		
+		_actors.attach(_player);
+		_scn.attach(_player);
+		_scn.attach(box);
+		_scn.attach(floor);
 	}
 	
 	@Override
@@ -63,6 +83,11 @@ public class GameState extends State implements CommandQueue.Delegate
 		getApplication().getPhoton().clearDrawCalls();
 		_cmds.run();
 		_actors.onUpdate(dt);
+
+		_collmgr.test();
+		
+		_cam.setViewPosition(_player.getPositionX() + _cam.getViewWidth()*0.25f, 0);
+
 		_bg.setPosition(_cam.getViewPositionX(), _cam.getViewPositionY());
 		_scn.sort(_sorter);
 		_scn.update(dt);
