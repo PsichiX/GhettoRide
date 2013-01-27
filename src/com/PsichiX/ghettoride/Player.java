@@ -5,11 +5,8 @@ import android.graphics.RectF;
 import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorSprite;
 import com.PsichiX.XenonCoreDroid.Framework.Actors.IActor;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
-import com.PsichiX.XenonCoreDroid.Framework.Graphics.Image;
-import com.PsichiX.XenonCoreDroid.Framework.Graphics.Material;
 import com.PsichiX.XenonCoreDroid.XeApplication.Touch;
 import com.PsichiX.XenonCoreDroid.XeApplication.Touches;
-import com.PsichiX.XenonCoreDroid.XeAssets;
 import com.PsichiX.ghettoride.physics.AdrenalinTabs;
 import com.PsichiX.ghettoride.physics.Bullet;
 import com.PsichiX.ghettoride.physics.CollisionManager;
@@ -52,18 +49,9 @@ public class Player extends ActorSprite implements ICollidable {
 	
 	private float deltaAdrenaline = -0.02f;
 	
-	public Player(XeAssets assets) {
+	public Player(FramesSequence anim) {
 		super(null);
-		Material mat = (Material)assets.get(R.raw.player_material, Material.class);
-		Image img = (Image)assets.get(R.drawable.player, Image.class);
-		setMaterial(mat);
-		setSizeFromImage(img);
-		setOffsetFromSize(0f, 1f);
-		_animator = new FramesSequence.Animator(null, this);
-	}
-	
-	public void setAnimation(FramesSequence anim) {
-		_animator.setOwner(anim);
+		_animator = new FramesSequence.Animator(anim, this);
 	}
 	
 	public void setNiggaCrew(NiggaCrew niggaCrew) {
@@ -124,6 +112,8 @@ public class Player extends ActorSprite implements ICollidable {
 		isOnGround = false;
 		
 		_animator.update(dt, 1.0f);
+		setOffsetFromSize(0.0f, 1.0f);
+		
 		if(stopBonusTime == 0f)
 			addAdrenaline(dt*deltaAdrenaline);
 		

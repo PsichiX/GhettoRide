@@ -3,6 +3,7 @@ package com.PsichiX.ghettoride;
 import android.graphics.RectF;
 
 import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorSprite;
+import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorsManager;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Image;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Material;
@@ -18,6 +19,7 @@ import com.PsichiX.ghettoride.physics.StopTab;
 public class Platform extends ActorSprite implements ICollidable {
 	private static int LAST_PLATFORM_ROLL = 3;
 	public static float LAST_PLATFORM_POS_X = 0f;
+	public static float ULTIMATE_CAPSULE_DISTANCE = -1.0f;
 	
 	private CollisionManager collisionManager;
 	private Theme theme;
@@ -48,14 +50,22 @@ public class Platform extends ActorSprite implements ICollidable {
 		if(getPositionX() < cam.getViewPositionX() - cam.getViewWidth()*0.5f - getWidth())
 		{
 			calculateNewPos();
-			if(	GameState.ultimateCapsuleDistance >= 0.0f &&
-				cam.getViewPositionX() > GameState.ultimateCapsuleDistance &&
+			if(	ULTIMATE_CAPSULE_DISTANCE >= 0.0f &&
+				cam.getViewPositionX() > ULTIMATE_CAPSULE_DISTANCE - cam.getViewWidth() &&
 				getManager() != null
 				)
 				getManager().detach(this);
 			else
 				addItem();
 		}
+	}
+	
+	@Override
+	public void onDetach(ActorsManager man)
+	{
+		super.onDetach(man);
+		if(getCollisionManager() != null)
+			getCollisionManager().detach(this);
 	}
 	
 	public void calculateStartPos() {

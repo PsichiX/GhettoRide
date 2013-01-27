@@ -7,7 +7,6 @@ import com.PsichiX.XenonCoreDroid.Framework.Graphics.*;
 public class FramesSequence
 {
 	private ArrayList<Frame> _frames = new ArrayList<Frame>();
-	private float _delay = 1.0f;
 	
 	public void addFrame(Frame f)
 	{
@@ -21,22 +20,14 @@ public class FramesSequence
 			_frames.remove(f);
 	}
 	
-	public void setDelay(float val)
+	public int getFramesCount()
 	{
-		_delay = val;
+		return _frames.size();
 	}
 	
-	public float getDelay()
+	public Frame getFrame(int idx)
 	{
-		return _delay;
-	}
-	
-	public void apply(Sprite spr, float time)
-	{
-		if(_delay == 0.0f)
-			return;
-		int frame = (int)(time / _delay) % _frames.size();
-		_frames.get(frame)._subImage.apply(spr);
+		return _frames.get(idx);
 	}
 	
 	public static class Frame
@@ -54,6 +45,7 @@ public class FramesSequence
 		private FramesSequence _owner;
 		private Sprite _target;
 		private float _time = 0.0f;
+		private float _delay = 1.0f;
 		
 		public Animator(FramesSequence owner, Sprite target)
 		{
@@ -91,12 +83,23 @@ public class FramesSequence
 			return _time;
 		}
 		
+		public void setDelay(float val)
+		{
+			_delay = val;
+		}
+		
+		public float getDelay()
+		{
+			return _delay;
+		}
+		
 		public void update(float dt, float speed)
 		{
 			if(_owner == null || _target == null)
 				return;
 			_time += dt * speed;
-			_owner.apply(_target, _time);
+			int frame = (int)(_time / _delay) % _owner.getFramesCount();
+			_owner.getFrame(frame)._subImage.apply(_target);
 		}
 	}
 }

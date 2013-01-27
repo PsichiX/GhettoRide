@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://texturepacker.com-->
-<!-- $TexturePacker:SmartUpdate:654add8772c98ab9b4ffed8e63c9d0df$ -->
+<!-- $TexturePacker:SmartUpdate:09048864ecb8f8d4d2d21fd32ffa668e$ -->
 <TextureAtlas imagePath="drawable/animations_sheet" materialPath="raw/animations_material">
-    <SubTexture name="player" x="70" y="2" width="32" height="100"/>
-    <SubTexture name="player1" x="36" y="2" width="32" height="100"/>
-    <SubTexture name="player2" x="2" y="2" width="32" height="100"/>
+    <SubTexture name="1" x="2" y="2" width="140" height="260" frameX="-46" frameY="0" frameWidth="186" frameHeight="260"/>
+    <SubTexture name="2" x="170" y="254" width="182" height="242" frameX="0" frameY="0" frameWidth="186" frameHeight="260"/>
+    <SubTexture name="3" x="144" y="2" width="160" height="250" frameX="-14" frameY="0" frameWidth="186" frameHeight="260"/>
+    <SubTexture name="4" x="2" y="264" width="166" height="246" frameX="-8" frameY="0" frameWidth="186" frameHeight="260"/>
 </TextureAtlas>

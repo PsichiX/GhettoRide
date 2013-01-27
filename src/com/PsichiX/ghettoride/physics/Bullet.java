@@ -1,7 +1,6 @@
 package com.PsichiX.ghettoride.physics;
 
 import android.graphics.RectF;
-
 import com.PsichiX.XenonCoreDroid.XeUtils.MathHelper;
 import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorSprite;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
@@ -47,17 +46,13 @@ public class Bullet extends ActorSprite implements ICollidable {
 		float posY = getPositionY() + dt*vec[1]*BULLET_SPEED;
 		
 		Camera2D cam = (Camera2D)getScene().getCamera();
-		if(posX > cam.getViewPositionX() + cam.getViewWidth()) {
+		if(	posX < cam.getViewPositionX() + cam.getViewWidth()			&&
+			posX > cam.getViewPositionX() - cam.getViewWidth()			&&
+			posY < cam.getViewPositionY() + cam.getViewHeight() * 0.5f	&&
+			posY > cam.getViewPositionY() - cam.getViewHeight() * 0.5f	)
+			setPosition(posX, posY);
+		else
 			getManager().detach(this);
-			return;
-		}
-		
-		if(posY < -cam.getViewHeight()*0.5f + getHeight()) {
-			getManager().detach(this);
-			return;
-		}
-		
-		setPosition(posX, posY);
 		angle += dt*BULLET_ROTATION;
 		if(angle > 360f)
 			angle -= 360f;
@@ -96,7 +91,8 @@ public class Bullet extends ActorSprite implements ICollidable {
 	}
 
 	@Override
-	public void onCollision(ICollidable o) {
+	public void onCollision(ICollidable o)
+	{
 		// TODO Auto-generated method stub
 		
 	}

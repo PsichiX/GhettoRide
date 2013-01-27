@@ -44,14 +44,14 @@ public class GameState extends State implements CommandQueue.Delegate
 	private NiggaCrew _niggaCrew;
 	private Theme _theme;
 	private int _themeId = 0;
-	
-	public static float ultimateCapsuleDistance = -1.0f;
+	private float _ultCapsDist = -1.0f;
+	private boolean _finishing = false;
 	
 	public GameState(int themeId, float ultimCapsDist)
 	{
 		super();
 		_themeId = themeId;
-		ultimateCapsuleDistance = ultimCapsDist;
+		_ultCapsDist = ultimCapsDist;
 	}
 	
 	@Override
@@ -76,10 +76,10 @@ public class GameState extends State implements CommandQueue.Delegate
 		_cam.setViewPosition(0f, 0f);
 		
 		_animSheet = (SpriteSheet)_theme.getAsset("animations", SpriteSheet.class);
-		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("player")));
-		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("player1")));
-		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("player2")));
-		_playerAnim.setDelay(0.5f);
+		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("1")));
+		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("2")));
+		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("3")));
+		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("4")));
 		
 		_bgSheet = (SpriteSheet)_theme.getAsset("backgrounds", SpriteSheet.class);
 		_parallax = new Parallax();
@@ -88,18 +88,18 @@ public class GameState extends State implements CommandQueue.Delegate
 		_parallax.addLayer(_parallaxBg);
 		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane2"), 100.0f, 0.0f, false));
 		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane3"), 250.0f, 0.0f, false));
-		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane4"), 750.0f, 0.0f, false));
+		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane4"), 500.0f, 0.0f, false));
 		_parallax.randomizeLayers(
 				_cam.getViewPositionX() - _cam.getViewWidth() * 1.0f,
 				_cam.getViewPositionY(),
 				_cam.getViewPositionX() + _cam.getViewWidth() * 1.0f,
 				_cam.getViewPositionY());
 		
-		_player = new Player(getApplication().getAssets());
-		_player.setAnimation(_playerAnim);
-		_player.onAttach(_collmgr);
+		_player = new Player(_playerAnim);
+		_collmgr.attach(_player);
 		_player.setPosition(0, 0, -1);
 		
+		Platform.ULTIMATE_CAPSULE_DISTANCE = _ultCapsDist;
 		for(int i=0; i<3; i++) {
 			Platform tmp = new Platform(_theme);
 			_collmgr.attach(tmp);
@@ -192,7 +192,8 @@ public class GameState extends State implements CommandQueue.Delegate
 	@Override
 	public void onInput(Touches ev)
 	{
-		_actors.onInput(ev);
+		if(!_finishing)
+			_actors.onInput(ev);
 	}
 	
 	@Override
@@ -214,6 +215,8 @@ public class GameState extends State implements CommandQueue.Delegate
 		//_cam.setViewPosition(_player.getPositionX() + _cam.getViewWidth()*0.1f, 0);
 		_cam.setViewPosition(_niggaCrew.getPositionX() + _cam.getViewWidth()*0.375f, 0);
 		
+		if(_cam.getViewPositionX() > _ultCapsDist)
+			_finishing = true;
 		_parallax.setArea(
 				_cam.getViewPositionX() - _cam.getViewWidth() * 1.0f,
 				_cam.getViewPositionY() - _cam.getViewHeight() * 1.0f,

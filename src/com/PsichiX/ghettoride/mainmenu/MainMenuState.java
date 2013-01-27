@@ -49,7 +49,7 @@ public class MainMenuState extends State {
 		_parallax.addLayer(_parallaxBg);
 		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane2"), -10.0f, 0.0f, false));
 		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane3"), -25.0f, 0.0f, false));
-		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane4"), -75.0f, 0.0f, false));
+		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane4"), -50.0f, 0.0f, false));
 		_parallax.randomizeLayers(
 				_cam.getViewPositionX() - _cam.getViewWidth() * 1.0f,
 				_cam.getViewPositionY(),
