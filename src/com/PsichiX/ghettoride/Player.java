@@ -52,7 +52,7 @@ public class Player extends ActorSprite implements ICollidable {
 	public Player(FramesSequence anim) {
 		super(null);
 		_animator = new FramesSequence.Animator(anim, this);
-		_animator.setDelay(0.1f);
+		_animator.setDelay(0.08f);
 	}
 	
 	public void setNiggaCrew(NiggaCrew niggaCrew) {
@@ -66,6 +66,7 @@ public class Player extends ActorSprite implements ICollidable {
 	
 	private float lastTouchDownY = 0f;
 	private float MIN_INPUT_DIFF = 20f;
+	
 	@Override
 	public void onInput(Touches ev) {
 		Touch touchDown = ev.getTouchByState(Touch.State.DOWN);

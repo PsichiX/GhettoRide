@@ -18,20 +18,24 @@ public class NiggaCrew extends ActorSprite implements ICollidable{
 	private Player _player;
 	private Theme theme;
 	
-	public NiggaCrew(Theme theme) {
+	private FramesSequence.Animator _animator;
+	
+	public NiggaCrew(Theme th, FramesSequence anim) {
 		super(null);
-		this.theme = theme;
-		Material mat = (Material)theme.getOwner().get(R.raw.nigga_crew_mat, Material.class);
-		Image img = (Image)theme.getOwner().get(R.drawable.nigga_crew, Image.class);
-		setMaterial(mat);
-		setSizeFromImage(img);
-		setOffsetFromSize(1f, 1f);
+		theme = th;
+		_animator = new FramesSequence.Animator(anim, this);
+		_animator.setDelay(0.05f);
 	}
 	
 	private float lastShootTime = 0f;
 	private float SHOOOT_INTERVAL = 2.5f;
+	
 	@Override
 	public void onUpdate(float dt) {
+		_animator.update(dt, 1.0f);
+		setSize(getWidth() * 0.8f, getHeight() * 0.1f);
+		setOffsetFromSize(1.0f, 1.0f);
+		
 		_posX = getPositionX() + NIGGA_CREW_SPEED*dt;
 		setPosition(_posX, getPositionY(), -1f);
 		

@@ -39,7 +39,9 @@ public class GameState extends State implements CommandQueue.Delegate
 	private CollisionManager _collmgr;
 	private Player _player;
 	private SpriteSheet _animSheet;
+	private SpriteSheet _animBlackSheet;
 	private FramesSequence _playerAnim;
+	private FramesSequence _playerBlackAnim;
 	private XeEcho.Sound _heartSnd;
 	private NiggaCrew _niggaCrew;
 	private Theme _theme;
@@ -67,6 +69,7 @@ public class GameState extends State implements CommandQueue.Delegate
 		_cmds = new CommandQueue();
 		_collmgr = new CollisionManager();
 		_playerAnim = new FramesSequence();
+		_playerBlackAnim = new FramesSequence();
 		
 		_theme = (Theme)getApplication().getAssets().get(_themeId, Theme.class);
 		
@@ -91,6 +94,19 @@ public class GameState extends State implements CommandQueue.Delegate
 		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("run9")));
 		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("run10")));
 		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("run11")));
+		
+		_animBlackSheet = (SpriteSheet)_theme.getAsset("animations_black", SpriteSheet.class);
+		_playerBlackAnim.addFrame(new FramesSequence.Frame(_animBlackSheet.getSubImage("run1")));
+		_playerBlackAnim.addFrame(new FramesSequence.Frame(_animBlackSheet.getSubImage("run2")));
+		_playerBlackAnim.addFrame(new FramesSequence.Frame(_animBlackSheet.getSubImage("run3")));
+		_playerBlackAnim.addFrame(new FramesSequence.Frame(_animBlackSheet.getSubImage("run4")));
+		_playerBlackAnim.addFrame(new FramesSequence.Frame(_animBlackSheet.getSubImage("run5")));
+		_playerBlackAnim.addFrame(new FramesSequence.Frame(_animBlackSheet.getSubImage("run6")));
+		_playerBlackAnim.addFrame(new FramesSequence.Frame(_animBlackSheet.getSubImage("run7")));
+		_playerBlackAnim.addFrame(new FramesSequence.Frame(_animBlackSheet.getSubImage("run8")));
+		_playerBlackAnim.addFrame(new FramesSequence.Frame(_animBlackSheet.getSubImage("run9")));
+		_playerBlackAnim.addFrame(new FramesSequence.Frame(_animBlackSheet.getSubImage("run10")));
+		_playerBlackAnim.addFrame(new FramesSequence.Frame(_animBlackSheet.getSubImage("run11")));
 		
 		_bgSheet = (SpriteSheet)_theme.getAsset("backgrounds", SpriteSheet.class);
 		_parallax = new Parallax();
@@ -136,8 +152,8 @@ public class GameState extends State implements CommandQueue.Delegate
 		floor2.setPosition(_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.4f);
 		floor2.onAttach(_collmgr);
 		
-		_niggaCrew = new NiggaCrew(_theme);
-		_niggaCrew.setPosition(-_cam.getViewWidth()*0.375f, floor1.getRecf().top);
+		_niggaCrew = new NiggaCrew(_theme, _playerBlackAnim);
+		_niggaCrew.setPosition(-_cam.getViewWidth()*0.4f, floor1.getRecf().top);
 		_actors.attach(_niggaCrew);
 		_collmgr.attach(_niggaCrew);
 		_scn.attach(_niggaCrew);
