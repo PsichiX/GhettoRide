@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:f16a31d9695f481fe39cfe352e0d8090$ -->
+<TextureAtlas imagePath="drawable/static_sheet" materialPath="raw/static_material">
+    <SubTexture name="adrenaline_tab" x="980" y="482" width="21" height="50"/>
+    <SubTexture name="box" x="508" y="408" width="393" height="80"/>
+    <SubTexture name="bullet" x="905" y="408" width="50" height="40"/>
+    <SubTexture name="game_menu" x="4" y="4" width="600" height="400"/>
+    <SubTexture name="good_tab" x="955" y="482" width="21" height="50"/>
+    <SubTexture name="jump_tab" x="930" y="452" width="21" height="50"/>
+    <SubTexture name="main_menu" x="608" y="4" width="400" height="400"/>
+    <SubTexture name="obstacle_net" x="959" y="408" width="49" height="70"/>
+    <SubTexture name="result_menu_dialog" x="4" y="408" width="500" height="400"/>
+    <SubTexture name="stop_tab" x="905" y="452" width="21" height="50"/>
+    <SubTexture name="syringe_background" x="4" y="866" width="200" height="50"/>
+    <SubTexture name="syringe_front" x="4" y="812" width="200" height="50"/>
+</TextureAtlas>
