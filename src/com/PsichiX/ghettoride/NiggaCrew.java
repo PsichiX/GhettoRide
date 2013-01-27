@@ -52,7 +52,7 @@ public class NiggaCrew extends ActorSprite implements ICollidable{
 				getManager().attach(bullet);
 				getCollisionManager().attach(bullet);
 				getScene().attach(bullet);
-				bullet.setSpeed(NIGGA_CREW_SPEED*1.4f);
+				bullet.setSpeed(NIGGA_CREW_SPEED*1.9f);
 				lastShootTime = 0f;
 			}
 		//}

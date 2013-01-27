@@ -240,42 +240,48 @@ public class Player extends ActorSprite implements ICollidable {
 		{
 			getManager().detach((IActor) o);
 			//addAdrenaline(0.2f);
-			adrenalineTime += 3f;
+			//adrenalineTime += 3f;
+			adrenalineTime = 3f;
 			deltaAdrenaline = 0.1f;
 		} 
 		else if(o instanceof StopTab) 
 		{
 			getManager().detach((IActor) o);
-			stopBonusTime += 5f;
+			//stopBonusTime += 5f;
+			stopBonusTime = 5f;
 			//addAdrenaline(0.1f);
 			deltaAdrenaline = 0f;
 		}
 		else if(o instanceof GoodTabs) 
 		{
 			getManager().detach((IActor) o);
-			goodBonusTime += 5f;
+			//goodBonusTime += 5f;
+			goodBonusTime = 5f;
 			//addAdrenaline(0.1f);
 		} 
 		else if(o instanceof JumpTab) 
 		{
 			getManager().detach((IActor) o);
-			jumpBonusTime += 5f;
+			//jumpBonusTime += 5f;
+			jumpBonusTime = 5f;
 			//addAdrenaline(0.1f);
 		} 
 		else if(o instanceof Obstacle) 
 		{
 			if(((Obstacle)o).inactiv() && goodBonusTime == 0f) {
 				//addAdrenaline(-0.1f);
-				obstacleTime += 2f;
-				deltaAdrenaline = -0.06f;
+				//obstacleTime += 3f;
+				obstacleTime = 3f;
+				deltaAdrenaline = -0.08f;
 			}
 		}
 		else if(o instanceof Bullet) 
 		{
 			getManager().detach((IActor) o);
 			//addAdrenaline(-0.1f);
-			obstacleTime += 3f;
-			deltaAdrenaline = -0.04f;
+			//obstacleTime += 3f;
+			obstacleTime = 3f;
+			deltaAdrenaline = -0.08f;
 		} 
 		else if(o instanceof NiggaCrew) 
 		{

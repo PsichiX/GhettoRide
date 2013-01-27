@@ -82,7 +82,7 @@ public class Platform extends ActorSprite implements ICollidable {
 			segmentPos = Math.min(5, segmentPos);
 		} while(segmentPos == LAST_PLATFORM_ROLL);
 		LAST_PLATFORM_ROLL = segmentPos;
-		float newPosY = minPosY - segmentPos * getHeight()*0.75f;
+		float newPosY = minPosY - segmentPos * getHeight();//*0.75f;
 		setPosition(newPosX, newPosY);
 	}
 	
@@ -90,24 +90,24 @@ public class Platform extends ActorSprite implements ICollidable {
 	
 	protected void addItem() {
 		if(GlobalRandom.getRandom().nextFloat() > spawnProp) {
-			if(GlobalRandom.getRandom().nextFloat() > 0.45) {
+			if(GlobalRandom.getRandom().nextFloat() > 0.40) {
 				Collectibles tmp;
-				if(GlobalRandom.getRandom().nextFloat() > 0.5) {
+				if(GlobalRandom.getRandom().nextFloat() > 0.6) {
 					 tmp = new AdrenalinTabs(theme);
-				} else if(GlobalRandom.getRandom().nextFloat() > 0.34) {
+				} else if(GlobalRandom.getRandom().nextFloat() > 0.4) {
 					tmp = new StopTab(theme);
-				} else if(GlobalRandom.getRandom().nextFloat() > 0.17) {
+				} else if(GlobalRandom.getRandom().nextFloat() > 0.2) {
 					tmp = new JumpTab(theme);
 				} else {
 					tmp = new GoodTabs(theme);
 				}
-				tmp.setPosition(getPositionX() + getWidth()/2 + GlobalRandom.getRandom().nextInt((int)getWidth()/2), getRecf().top);
+				tmp.setPosition(getPositionX() + getWidth()/4 + GlobalRandom.getRandom().nextInt((int)getWidth()/2), getRecf().top);
 				getManager().attach(tmp);
 				getScene().attach(tmp);
 				getCollisionManager().attach(tmp);
 			} else {
 				ObstacleNet tmp = new ObstacleNet(theme);
-				tmp.setPosition(getPositionX() + getWidth()/2 + GlobalRandom.getRandom().nextInt((int)getWidth()/2), getRecf().top);
+				tmp.setPosition(getPositionX() + getWidth()/4 + GlobalRandom.getRandom().nextInt((int)getWidth()/2), getRecf().top);
 				getManager().attach(tmp);
 				getScene().attach(tmp);
 				getCollisionManager().attach(tmp);
