@@ -6,6 +6,7 @@ import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorSprite;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Image;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Material;
+import com.PsichiX.ghettoride.GlobalRandom;
 import com.PsichiX.ghettoride.R;
 import com.PsichiX.ghettoride.Theme;
 
@@ -16,6 +17,9 @@ public class Bullet extends ActorSprite implements ICollidable {
 	private float angle = 0f;
 	
 	private Theme theme;
+
+	private float _spedY;
+	private float _deltaSpeedY = 25f;
 	
 	public Bullet(Theme theme) {
 		super(null);
@@ -25,10 +29,13 @@ public class Bullet extends ActorSprite implements ICollidable {
 		setSizeFromImage(img);
 		//setOffsetFromSize(0f, 1f);
 		setOffsetFromSize(0.5f, 0.5f);
+		
+		_spedY = -50f - GlobalRandom.getRandom().nextFloat() * 25f;
 	}
 	
 	public void setSpeed(float speed) {
 		BULLET_SPEED = speed;
+		BULLET_SPEED += GlobalRandom.getRandom().nextFloat()*BULLET_SPEED*0.3;
 	}
 	
 	private float[] vec;
@@ -42,8 +49,12 @@ public class Bullet extends ActorSprite implements ICollidable {
 	
 	@Override
 	public void onUpdate(float dt) {
-		float posX = getPositionX() + dt*vec[0]*BULLET_SPEED;
-		float posY = getPositionY() + dt*vec[1]*BULLET_SPEED;
+		//float posX = getPositionX() + dt*vec[0]*BULLET_SPEED;
+		//float posY = getPositionY() + dt*vec[1]*BULLET_SPEED;
+		
+		float posX = getPositionX() +  dt*BULLET_SPEED;
+		float posY = getPositionY() + dt*_spedY;
+		_spedY += _deltaSpeedY;
 		
 		Camera2D cam = (Camera2D)getScene().getCamera();
 		if(	posX < cam.getViewPositionX() + cam.getViewWidth()			&&

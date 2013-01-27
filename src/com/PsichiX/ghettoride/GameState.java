@@ -121,13 +121,19 @@ public class GameState extends State implements CommandQueue.Delegate
 		}
 		
 		Floor floor1 = new Floor(_theme);
-		floor1.setSize(_cam.getViewWidth(), _cam.getViewHeight()*0.1f);
-		floor1.setPosition(-_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.5f);
+		//floor1.setSize(_cam.getViewWidth(), _cam.getViewHeight()*0.1f);
+		floor1.setSize(_cam.getViewWidth(), floor1.getHeight());
+		floor1.setOffsetFromSize(0f, 0f);
+		//floor1.setPosition(-_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.5f);
+		floor1.setPosition(-_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.4f);
 		floor1.onAttach(_collmgr);
 		
 		Floor floor2 = new Floor(_theme);
-		floor2.setSize(_cam.getViewWidth(), _cam.getViewHeight()*0.1f);
-		floor2.setPosition(_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.5f);
+		//floor2.setSize(_cam.getViewWidth(), _cam.getViewHeight()*0.1f);
+		floor2.setSize(_cam.getViewWidth(), floor2.getHeight());
+		floor2.setOffsetFromSize(0f, 0f);
+		//floor2.setPosition(_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.5f);
+		floor2.setPosition(_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.4f);
 		floor2.onAttach(_collmgr);
 		
 		_niggaCrew = new NiggaCrew(_theme);

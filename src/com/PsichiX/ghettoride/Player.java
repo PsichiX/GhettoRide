@@ -265,10 +265,10 @@ public class Player extends ActorSprite implements ICollidable {
 		{
 			if(((Obstacle)o).inactiv() && goodBonusTime == 0f) {
 				//addAdrenaline(-0.1f);
-				obstacleTime += 1f;
+				obstacleTime += 2f;
 				deltaAdrenaline = -0.06f;
 			}
-		} 
+		}
 		else if(o instanceof Bullet) 
 		{
 			getManager().detach((IActor) o);

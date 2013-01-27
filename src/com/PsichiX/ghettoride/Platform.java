@@ -36,7 +36,7 @@ public class Platform extends ActorSprite implements ICollidable {
 	
 	public void calculate() {
 		Camera2D cam = (Camera2D)getScene().getCamera();
-		minPosX = getWidth()*0.5f;
+		minPosX = getWidth()*0.25f;//0.5f
 		minPosY = cam.getViewHeight()*0.5f;
 	}
 	
@@ -79,10 +79,10 @@ public class Platform extends ActorSprite implements ICollidable {
 		int segmentPos = 0;
 		do {
 			segmentPos = Math.max(2, GlobalRandom.getRandom().nextInt(6) - 3 + LAST_PLATFORM_ROLL);
-			segmentPos = Math.min(7, segmentPos);
+			segmentPos = Math.min(5, segmentPos);
 		} while(segmentPos == LAST_PLATFORM_ROLL);
 		LAST_PLATFORM_ROLL = segmentPos;
-		float newPosY = minPosY - segmentPos * getHeight();
+		float newPosY = minPosY - segmentPos * getHeight()*0.75f;
 		setPosition(newPosX, newPosY);
 	}
 	

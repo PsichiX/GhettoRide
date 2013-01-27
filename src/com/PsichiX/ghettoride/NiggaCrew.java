@@ -44,11 +44,11 @@ public class NiggaCrew extends ActorSprite implements ICollidable{
 				float posX = getPositionX();
 				float posY = getPositionY() - getHeight()*0.5f;
 				bullet.setPosition(posX, posY);
-				bullet.setVector(posX, posY, _player.getPositionX(), _player.getPositionY() - _player.getHeight()*0.7f);
+				//bullet.setVector(posX, posY, _player.getPositionX(), _player.getPositionY() - _player.getHeight()*0.7f);
 				getManager().attach(bullet);
 				getCollisionManager().attach(bullet);
 				getScene().attach(bullet);
-				bullet.setSpeed(NIGGA_CREW_SPEED*2.5f);
+				bullet.setSpeed(NIGGA_CREW_SPEED*1.4f);
 				lastShootTime = 0f;
 			}
 		//}
