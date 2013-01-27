@@ -28,7 +28,6 @@ public class MainMenuPanel extends ActorSprite {
 	
 	@Override
 	public void onInput(Touches ev) {
-		//Touch touchDown = ev.getTouchByState(Touch.State.DOWN);
 		Touch touchDown = ev.getTouchByState(Touch.State.UP);
 		if(touchDown != null)
 		{

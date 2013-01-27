@@ -1,5 +1,7 @@
 package com.PsichiX.ghettoride.resultmenu;
 
+import android.util.Log;
+
 import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorsManager;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Scene;
@@ -21,7 +23,7 @@ public class ResultMenuState extends State {
 	private Parallax _parallax;
 	private Parallax.Layer _parallaxBg;
 	
-	private ActorsManager _actormgr = new ActorsManager();
+	private ActorsManager _actormgr;
 	
 	private Result result;
 	private int _themeId;
@@ -34,10 +36,13 @@ public class ResultMenuState extends State {
 	
 	@Override
 	public void onEnter() {
+		Log.d("STATE", "ENTER " + getClass().toString());
+		_actormgr = new ActorsManager();
 		_theme = (Theme)getApplication().getAssets().get(_themeId, Theme.class);
 		
 		_scn = (Scene)getApplication().getAssets().get(R.raw.scene, Scene.class);
 		_cam = (Camera2D)_scn.getCamera();
+		_cam.setViewPosition(0f, 0f);
 		
 		_bgSheet = (SpriteSheet)_theme.getAsset("backgrounds", SpriteSheet.class);
 		_parallax = new Parallax();
@@ -78,5 +83,12 @@ public class ResultMenuState extends State {
 	@Override
 	public void onInput(Touches arg0) {
 		_actormgr.onInput(arg0);
+	}
+	
+	@Override
+	public void onExit() {
+		Log.d("STATE", "EXIT " + getClass().toString());
+		_scn.detachAll();
+		_actormgr.detachAll();
 	}
 }

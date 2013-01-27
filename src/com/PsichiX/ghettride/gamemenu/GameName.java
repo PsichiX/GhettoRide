@@ -13,8 +13,8 @@ public class GameName extends Text {
 		Material mat = (Material)assets.get(R.raw.badaboom_material, Material.class);
 		
 		build(str, font, mat,
-				Font.Alignment.BOTTOM,
 				Font.Alignment.CENTER,
-				1.0f, 1.0f);
+				Font.Alignment.BOTTOM,
+				3.0f, 3.0f);
 	}
 }

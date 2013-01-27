@@ -1,5 +1,7 @@
 package com.PsichiX.ghettoride.mainmenu;
 
+import android.util.Log;
+
 import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorsManager;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Scene;
@@ -7,7 +9,6 @@ import com.PsichiX.XenonCoreDroid.Framework.Graphics.SpriteSheet;
 import com.PsichiX.XenonCoreDroid.XeApplication.State;
 import com.PsichiX.XenonCoreDroid.XeApplication.Touches;
 import com.PsichiX.ghettoride.Parallax;
-import com.PsichiX.ghettoride.Platform;
 import com.PsichiX.ghettoride.R;
 import com.PsichiX.ghettoride.Theme;
 
@@ -21,7 +22,7 @@ public class MainMenuState extends State {
 	private Parallax _parallax;
 	private Parallax.Layer _parallaxBg;
 	
-	private ActorsManager _actormgr = new ActorsManager();
+	private ActorsManager _actormgr;
 	
 	private int _themeId;
 	
@@ -32,10 +33,14 @@ public class MainMenuState extends State {
 	
 	@Override
 	public void onEnter() {
+		Log.d("STATE", "ENTER " + getClass().toString());
+		_actormgr = new ActorsManager();
+		
 		_theme = (Theme)getApplication().getAssets().get(_themeId, Theme.class);
 		
 		_scn = (Scene)getApplication().getAssets().get(R.raw.scene, Scene.class);
 		_cam = (Camera2D)_scn.getCamera();
+		_cam.setViewPosition(0f, 0f);
 		
 		_bgSheet = (SpriteSheet)_theme.getAsset("backgrounds", SpriteSheet.class);
 		_parallax = new Parallax();
@@ -85,8 +90,8 @@ public class MainMenuState extends State {
 	}
 	
 	@Override
-	public void onExit()
-	{
+	public void onExit() {
+		Log.d("STATE", "EXIT " + getClass().toString());
 		_scn.detachAll();
 		_actormgr.detachAll();
 	}

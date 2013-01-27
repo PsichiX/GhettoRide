@@ -1,5 +1,7 @@
 package com.PsichiX.ghettoride;
 
+import android.util.Log;
+
 import com.PsichiX.XenonCoreDroid.XeApplication.*;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.*;
 import com.PsichiX.XenonCoreDroid.Framework.Actors.*;
@@ -28,16 +30,16 @@ public class GameState extends State implements CommandQueue.Delegate
 	
 	private Camera2D _cam;
 	private Scene _scn;
-	private ShapeComparator.DescZ _sorter = new ShapeComparator.DescZ();
-	private ActorsManager _actors = new ActorsManager();
-	private CommandQueue _cmds = new CommandQueue();
+	private ShapeComparator.DescZ _sorter;
+	private ActorsManager _actors;
+	private CommandQueue _cmds;
 	private SpriteSheet _bgSheet;
 	private Parallax _parallax;
 	private Parallax.Layer _parallaxBg;
-	private CollisionManager _collmgr = new CollisionManager();
+	private CollisionManager _collmgr;
 	private Player _player;
 	private SpriteSheet _animSheet;
-	private FramesSequence _playerAnim = new FramesSequence();
+	private FramesSequence _playerAnim;
 	private XeEcho.Sound _heartSnd;
 	private NiggaCrew _niggaCrew;
 	private Theme _theme;
@@ -52,6 +54,13 @@ public class GameState extends State implements CommandQueue.Delegate
 	@Override
 	public void onEnter()
 	{
+		Log.d("STATE", "ENTER " + getClass().toString());
+		_sorter = new ShapeComparator.DescZ();
+		_actors = new ActorsManager();
+		_cmds = new CommandQueue();
+		_collmgr = new CollisionManager();
+		_playerAnim = new FramesSequence();
+		
 		_theme = (Theme)getApplication().getAssets().get(_themeId, Theme.class);
 		
 		_cmds.setDelegate(this);
@@ -166,6 +175,7 @@ public class GameState extends State implements CommandQueue.Delegate
 	@Override
 	public void onExit()
 	{
+		Log.d("STATE", "EXIT " + getClass().toString());
 		Platform.LAST_PLATFORM_POS_X = 0f;
 		_scn.detachAll();
 		_actors.detachAll();
@@ -215,8 +225,7 @@ public class GameState extends State implements CommandQueue.Delegate
 		_scn.update(dt);
 		
 		if(!_player.isAlive()) {
-			getApplication().popState();
-			getApplication().pushState(new ResultMenuState(_themeId, _player.getResult()));
+			getApplication().changeState(new ResultMenuState(_themeId, _player.getResult()));
 		}
 	}
 	

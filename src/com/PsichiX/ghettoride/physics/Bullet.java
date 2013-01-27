@@ -1,7 +1,6 @@
 package com.PsichiX.ghettoride.physics;
 
 import android.graphics.RectF;
-import android.util.Log;
 
 import com.PsichiX.XenonCoreDroid.XeAssets;
 import com.PsichiX.XenonCoreDroid.XeUtils.MathHelper;
@@ -13,7 +12,10 @@ import com.PsichiX.ghettoride.Player;
 import com.PsichiX.ghettoride.R;
 
 public class Bullet extends ActorSprite implements ICollidable {
-	private float BULLET_SPEED = Player.MAX_SPEED_X;
+	private float BULLET_SPEED = Player.MAX_SPEED_X*1.5f;
+	private float BULLET_ROTATION = 360f;
+	
+	private float angle = 0f;
 	
 	public Bullet(XeAssets assets) {
 		super(null);
@@ -21,14 +23,12 @@ public class Bullet extends ActorSprite implements ICollidable {
 		Image img = (Image)assets.get(R.drawable.bullet, Image.class);
 		setMaterial(mat);
 		setSizeFromImage(img);
-		setOffsetFromSize(0f, 1f);
+		//setOffsetFromSize(0f, 1f);
+		setOffsetFromSize(0.5f, 0.5f);
 	}
 	
 	private float[] vec;
 	public void setVector(float a_x, float a_y, float b_x, float b_y) {
-		/*float[] vec = new float[2];
-		vec[0] = b_x - a_x;
-		vec[1] = b_y - a_y;*/
 		vec = MathHelper.vecNormalize(b_x - a_x, b_y - a_y, 0);
 		
 		double angleRad = Math.atan2(vec[1], vec[0]);
@@ -40,7 +40,6 @@ public class Bullet extends ActorSprite implements ICollidable {
 	public void onUpdate(float dt) {
 		float posX = getPositionX() + dt*vec[0]*BULLET_SPEED;
 		float posY = getPositionY() + dt*vec[1]*BULLET_SPEED;
-		Log.d("up", "updata " + (dt*vec[0]*BULLET_SPEED) + " " + (dt*vec[1]*BULLET_SPEED) + " " + vec[0] + " " + vec[1] );
 		
 		Camera2D cam = (Camera2D)getScene().getCamera();
 		if(posX > cam.getViewPositionX() + cam.getViewWidth()) {
@@ -54,6 +53,10 @@ public class Bullet extends ActorSprite implements ICollidable {
 		}
 		
 		setPosition(posX, posY);
+		angle += dt*BULLET_ROTATION;
+		if(angle > 360f)
+			angle -= 360f;
+		setAngle(angle);
 	}
 
 	private CollisionManager collisionManager;
