@@ -38,7 +38,7 @@ public class ResultMenuDialog extends ActorSprite {
 				if(worldLoc[0] > cam.getViewPositionX() - getWidth()*0.5f && 
 					worldLoc[0] < cam.getViewPositionX()) {
 					Log.d("TOUCH", "RESTART");
-					MainActivity.app.changeState(new GameState(theme.getId()));
+					MainActivity.app.changeState(new GameState(theme.getId(), GameState.ULTIMATE_CAPSULE_DIST));
 				} else if(worldLoc[0] > cam.getViewPositionX() &&
 						worldLoc[0] < cam.getViewPositionX() + getWidth()*0.5f) {
 					Log.d("TOUCH", "TO MAIN MENU");

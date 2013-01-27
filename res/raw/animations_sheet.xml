@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://texturepacker.com-->
-<!-- $TexturePacker:SmartUpdate:09048864ecb8f8d4d2d21fd32ffa668e$ -->
+<!-- $TexturePacker:SmartUpdate:08eb3df39a1d664d7f2b44a7012c7285$ -->
 <TextureAtlas imagePath="drawable/animations_sheet" materialPath="raw/animations_material">
-    <SubTexture name="1" x="2" y="2" width="140" height="260" frameX="-46" frameY="0" frameWidth="186" frameHeight="260"/>
-    <SubTexture name="2" x="170" y="254" width="182" height="242" frameX="0" frameY="0" frameWidth="186" frameHeight="260"/>
-    <SubTexture name="3" x="144" y="2" width="160" height="250" frameX="-14" frameY="0" frameWidth="186" frameHeight="260"/>
-    <SubTexture name="4" x="2" y="264" width="166" height="246" frameX="-8" frameY="0" frameWidth="186" frameHeight="260"/>
+    <SubTexture name="run1" x="174" y="242" width="170" height="230" frameX="-8" frameY="0" frameWidth="180" frameHeight="250"/>
+    <SubTexture name="run10" x="2" y="474" width="128" height="238" frameX="-15" frameY="-12" frameWidth="180" frameHeight="250"/>
+    <SubTexture name="run11" x="346" y="244" width="156" height="236" frameX="0" frameY="-10" frameWidth="180" frameHeight="250"/>
+    <SubTexture name="run2" x="182" y="2" width="172" height="238" frameX="-8" frameY="-10" frameWidth="180" frameHeight="250"/>
+    <SubTexture name="run3" x="116" y="714" width="80" height="242" frameX="-51" frameY="-4" frameWidth="180" frameHeight="250"/>
+    <SubTexture name="run4" x="2" y="714" width="112" height="242" frameX="-35" frameY="-4" frameWidth="180" frameHeight="250"/>
+    <SubTexture name="run5" x="356" y="2" width="150" height="240" frameX="-15" frameY="-6" frameWidth="180" frameHeight="250"/>
+    <SubTexture name="run6" x="2" y="2" width="178" height="226" frameX="-2" frameY="-10" frameWidth="180" frameHeight="250"/>
+    <SubTexture name="run7" x="2" y="230" width="170" height="242" frameX="-10" frameY="-4" frameWidth="180" frameHeight="250"/>
+    <SubTexture name="run8" x="212" y="474" width="108" height="240" frameX="-38" frameY="-10" frameWidth="180" frameHeight="250"/>
+    <SubTexture name="run9" x="132" y="474" width="78" height="234" frameX="-50" frameY="-11" frameWidth="180" frameHeight="250"/>
 </TextureAtlas>

@@ -90,7 +90,7 @@ public class Platform extends ActorSprite implements ICollidable {
 	
 	protected void addItem() {
 		if(GlobalRandom.getRandom().nextFloat() > spawnProp) {
-			if(GlobalRandom.getRandom().nextFloat() > 0.7) {
+			if(GlobalRandom.getRandom().nextFloat() > 0.45) {
 				Collectibles tmp;
 				if(GlobalRandom.getRandom().nextFloat() > 0.5) {
 					 tmp = new AdrenalinTabs(theme);

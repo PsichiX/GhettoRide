@@ -52,6 +52,7 @@ public class Player extends ActorSprite implements ICollidable {
 	public Player(FramesSequence anim) {
 		super(null);
 		_animator = new FramesSequence.Animator(anim, this);
+		_animator.setDelay(0.1f);
 	}
 	
 	public void setNiggaCrew(NiggaCrew niggaCrew) {
@@ -112,6 +113,7 @@ public class Player extends ActorSprite implements ICollidable {
 		isOnGround = false;
 		
 		_animator.update(dt, 1.0f);
+		setSize(getWidth() * 0.5f, getHeight() * 0.5f);
 		setOffsetFromSize(0.0f, 1.0f);
 		
 		if(stopBonusTime == 0f)

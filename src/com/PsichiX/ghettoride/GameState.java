@@ -47,6 +47,8 @@ public class GameState extends State implements CommandQueue.Delegate
 	private float _ultCapsDist = -1.0f;
 	private boolean _finishing = false;
 	
+	public static float ULTIMATE_CAPSULE_DIST = -1.0f;
+	
 	public GameState(int themeId, float ultimCapsDist)
 	{
 		super();
@@ -57,6 +59,8 @@ public class GameState extends State implements CommandQueue.Delegate
 	@Override
 	public void onEnter()
 	{
+		ULTIMATE_CAPSULE_DIST = _ultCapsDist;
+		
 		Log.d("STATE", "ENTER " + getClass().toString());
 		_sorter = new ShapeComparator.DescZ();
 		_actors = new ActorsManager();
@@ -76,19 +80,26 @@ public class GameState extends State implements CommandQueue.Delegate
 		_cam.setViewPosition(0f, 0f);
 		
 		_animSheet = (SpriteSheet)_theme.getAsset("animations", SpriteSheet.class);
-		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("1")));
-		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("2")));
-		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("3")));
-		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("4")));
+		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("run1")));
+		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("run2")));
+		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("run3")));
+		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("run4")));
+		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("run5")));
+		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("run6")));
+		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("run7")));
+		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("run8")));
+		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("run9")));
+		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("run10")));
+		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("run11")));
 		
 		_bgSheet = (SpriteSheet)_theme.getAsset("backgrounds", SpriteSheet.class);
 		_parallax = new Parallax();
 		_parallax.setScene(_scn);
 		_parallaxBg = new Parallax.Layer(_bgSheet.getSubImage("bg"), 0.0f, 0.0f, true);
 		_parallax.addLayer(_parallaxBg);
-		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane2"), 100.0f, 0.0f, false));
-		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane3"), 250.0f, 0.0f, false));
-		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane4"), 500.0f, 0.0f, false));
+		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane2"), -20.0f, 0.0f, false));
+		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane3"), -50.0f, 0.0f, false));
+		_parallax.addLayer(new Parallax.Layer(_bgSheet.getSubImage("crane4"), -100.0f, 0.0f, false));
 		_parallax.randomizeLayers(
 				_cam.getViewPositionX() - _cam.getViewWidth() * 1.0f,
 				_cam.getViewPositionY(),
@@ -213,9 +224,13 @@ public class GameState extends State implements CommandQueue.Delegate
 		_collmgr.test();
 		
 		//_cam.setViewPosition(_player.getPositionX() + _cam.getViewWidth()*0.1f, 0);
+		float camrx = _cam.getViewPositionX();
+		float camry = _cam.getViewPositionY();
 		_cam.setViewPosition(_niggaCrew.getPositionX() + _cam.getViewWidth()*0.375f, 0);
+		camrx = _cam.getViewPositionX() - camrx;
+		camry = _cam.getViewPositionY() - camry;
 		
-		if(_cam.getViewPositionX() > _ultCapsDist)
+		if(_ultCapsDist >= 0.0f && _cam.getViewPositionX() > _ultCapsDist)
 			_finishing = true;
 		_parallax.setArea(
 				_cam.getViewPositionX() - _cam.getViewWidth() * 1.0f,
@@ -223,6 +238,7 @@ public class GameState extends State implements CommandQueue.Delegate
 				_cam.getViewWidth() * 2.0f,
 		 		_cam.getViewHeight() * 2.0f
 				);
+		_parallax.moveLayers(camrx, camry);
 		_parallax.onUpdate(dt, _player.getNormPlayerSpeed());
 		_parallaxBg.setPosition(_cam.getViewPositionX(), _cam.getViewPositionY());
 		_parallaxBg.setSize(_cam.getViewWidth(), _cam.getViewHeight());

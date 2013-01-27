@@ -93,4 +93,10 @@ public class Parallax
 			lr.setPosition(tx, ty);
 		}
 	}
+
+	public void moveLayers(float relX, float relY)
+	{
+		for(Layer lr : _layers)
+			lr.setPosition(lr.getPositionX() + relX, lr.getPositionY() + relY);
+	}
 }

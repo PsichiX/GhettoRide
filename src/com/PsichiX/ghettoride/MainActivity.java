@@ -6,25 +6,16 @@ import com.PsichiX.XenonCoreDroid.Framework.Utils.Utils;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Graphics;
 import com.PsichiX.ghettoride.Utils.SheredprefUtils;
 import com.PsichiX.ghettoride.common.LevelInfo;
+import com.PsichiX.ghettoride.mainmenu.MainMenuState;
 
 public class MainActivity extends XeActivity
 {
 	public static XeApplication app;
-	public static LevelInfo levels = new LevelInfo();
+	public static LevelInfo levels;
 	
 	@Override
 	public void onCreate(android.os.Bundle savedInstanceState) 
 	{
-		// setup levels
-		levels.getLevels().add(new LevelInfo.Level(1, "Level 1 - Port", R.raw.default_theme));
-		//
-		levels.getLevels().add(new LevelInfo.Level(2, "Level 2", R.raw.default_theme));
-		levels.getLevels().add(new LevelInfo.Level(3, "Level 3", R.raw.default_theme));
-		levels.getLevels().add(new LevelInfo.Level(4, "Level 4", R.raw.default_theme));
-		levels.getLevels().add(new LevelInfo.Level(5, "Level 5", R.raw.default_theme));
-		levels.getLevels().add(new LevelInfo.Level(6, "Level 6", R.raw.default_theme));
-		//
-		
 		// setup application before running it
 		XeApplication.SETUP_SOUND_STREAMS = 16;
 		XeApplication.SETUP_WINDOW_HAS_TITLE = false;
@@ -34,6 +25,8 @@ public class MainActivity extends XeActivity
 		// create application
 		super.onCreate(savedInstanceState);
 		app = getApplicationCore();
+		levels = new LevelInfo();
+		levels.getLevels().add(new LevelInfo.Level(1, "Level 1 - Port", R.raw.default_theme, 2000.0f));
 		
 		Utils.initModule(getApplicationCore().getAssets());
 		Graphics.initModule(getApplicationCore().getAssets(), getApplicationCore().getPhoton());
@@ -45,7 +38,7 @@ public class MainActivity extends XeActivity
 		getApplicationCore().getPhoton().getRenderer().getTimer().setFixedStep(1000 / 30);
 		getApplicationCore().getPhoton().getRenderer().setClearBackground(true, 1.0f, 1.0f, 1.0f, 1.0f);
 		getApplicationCore().getPhoton().clearDrawCalls();
-		getApplicationCore().run(new GameState(R.raw.default_theme, 1.0f));
-		//getApplicationCore().run(new MainMenuState(R.raw.default_theme));
+		//getApplicationCore().run(new GameState(R.raw.default_theme, 1.0f));
+		getApplicationCore().run(new MainMenuState(R.raw.default_theme));
 	}
 }

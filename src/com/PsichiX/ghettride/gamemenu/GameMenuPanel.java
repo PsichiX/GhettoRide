@@ -12,6 +12,7 @@ import com.PsichiX.ghettoride.GameState;
 import com.PsichiX.ghettoride.MainActivity;
 import com.PsichiX.ghettoride.R;
 import com.PsichiX.ghettoride.Theme;
+import com.PsichiX.ghettoride.common.LevelInfo;
 
 public class GameMenuPanel extends ActorSprite {
 	private Theme theme;
@@ -48,13 +49,15 @@ public class GameMenuPanel extends ActorSprite {
 					worldLoc[0] < cam.getViewPositionX())
 				{
 					Log.d("MAIN_MENU", "STORY");
-					MainActivity.app.changeState(new GameState(theme.getId()));
+					LevelInfo.Level lvl = MainActivity.levels.getLevelByThemeId(theme.getId());
+					float d = lvl != null ? lvl.getFinishDistance() : -1.0f;
+					MainActivity.app.changeState(new GameState(theme.getId(), d));
 				} 
 				else if(worldLoc[0] > cam.getViewPositionX() &&
 						worldLoc[0] < cam.getViewPositionX() + getWidth()*0.5f)
 				{
 					Log.d("MAIN_MENU", "FREE");
-					MainActivity.app.changeState(new GameState(theme.getId()));
+					MainActivity.app.changeState(new GameState(theme.getId(), -1.0f));
 				}
 			}
 		}

@@ -8,6 +8,7 @@ import com.PsichiX.XenonCoreDroid.Framework.Graphics.Image;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Material;
 import com.PsichiX.XenonCoreDroid.XeApplication.Touch;
 import com.PsichiX.XenonCoreDroid.XeApplication.Touches;
+import com.PsichiX.ghettoride.GameState;
 import com.PsichiX.ghettoride.MainActivity;
 import com.PsichiX.ghettoride.R;
 import com.PsichiX.ghettoride.Theme;
@@ -42,7 +43,9 @@ public class MainMenuPanel extends ActorSprite {
 					worldLoc[1] < cam.getViewPositionY()) 
 				{
 					Log.d("MAIN_MENU", "GRA");
-					MainActivity.app.pushState(new GameMenuState(theme.getId()));
+					//MainActivity.app.pushState(new GameMenuState(theme.getId()));
+					// TODO: HACK HERE
+					MainActivity.app.pushState(new GameState(theme.getId(), -1.0f));
 				} 
 				else if(worldLoc[1] > cam.getViewPositionY()  &&
 						worldLoc[1] < cam.getViewPositionY() + getHeight()*0.25f) 
