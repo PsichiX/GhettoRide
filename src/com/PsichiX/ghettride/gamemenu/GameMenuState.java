@@ -2,7 +2,6 @@ package com.PsichiX.ghettride.gamemenu;
 
 import java.util.List;
 
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorsManager;

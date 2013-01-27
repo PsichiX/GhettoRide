@@ -11,6 +11,7 @@ import com.PsichiX.XenonCoreDroid.XeApplication.Touches;
 import com.PsichiX.ghettoride.MainActivity;
 import com.PsichiX.ghettoride.R;
 import com.PsichiX.ghettoride.Theme;
+import com.PsichiX.ghettride.credits.CreditsState;
 import com.PsichiX.ghettride.gamemenu.GameMenuState;
 
 public class MainMenuPanel extends ActorSprite {
@@ -52,6 +53,7 @@ public class MainMenuPanel extends ActorSprite {
 						worldLoc[1] < cam.getViewPositionY() + getHeight()*0.5f) 
 				{
 					Log.d("MAIN_MENU", "CREDITS");
+					MainActivity.app.pushState(new CreditsState(theme.getId()));
 				}
 			}
 		}

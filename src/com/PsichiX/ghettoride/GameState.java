@@ -22,7 +22,7 @@ public class GameState extends State implements CommandQueue.Delegate
 {
 	private SyringeFrontGui _syringeFront;
 	private SyringeBackgroundGui _syringeBackground;
-	private NiggaIndicator _niggaIndicator;
+	//private NiggaIndicator _niggaIndicator;
 	private DistanceTravelled _distanceTravelled;
 	private GoodBonusGui _goodBonusGui;
 	private StopBonusGui _stopBonusGui;
@@ -142,14 +142,14 @@ public class GameState extends State implements CommandQueue.Delegate
 		_syringeFront = new SyringeFrontGui(getApplication().getAssets());
 		_syringeFront.setPosition(_cam.getViewPositionX(), -_cam.getViewHeight()*0.4f, -1f);
 		_scn.attach(_syringeFront);
-		
+		/*
 		_niggaIndicator = new NiggaIndicator();
 		_niggaIndicator.setPosition(_cam.getViewPositionX()-_cam.getViewWidth()*0.5f, -_cam.getViewHeight()*0.5f, -1f);
 		_niggaIndicator.build(getApplication().getAssets(), getNiggaDistanceX(_player, _niggaCrew));
 		_scn.attach(_niggaIndicator);
-		
+		*/
 		_distanceTravelled = new DistanceTravelled();
-		_distanceTravelled.setPosition(_cam.getViewPositionX()-_cam.getViewWidth()*0.5f, -_cam.getViewHeight()*0.5f + _niggaIndicator.getHeight(), -1f);
+		_distanceTravelled.setPosition(_cam.getViewPositionX()-_cam.getViewWidth()*0.5f, -_cam.getViewHeight()*0.5f /*+ _niggaIndicator.getHeight()*/, -1f);
 		_distanceTravelled.build(getApplication().getAssets(), _player.getDistanceTravelled());
 		_scn.attach(_distanceTravelled);
 		
@@ -248,11 +248,11 @@ public class GameState extends State implements CommandQueue.Delegate
 		
 		_syringeFront.setPosition(_cam.getViewPositionX(), _cam.getViewPositionY()-_cam.getViewHeight()*0.4f);
 		_syringeFront.setSize(_player.getNormPlayerSpeed());
-		
+		/*
 		_niggaIndicator.setPosition(_cam.getViewPositionX()-_cam.getViewWidth()*0.5f, -_cam.getViewHeight()*0.5f);
 		_niggaIndicator.build(getApplication().getAssets(), getNiggaDistanceX(_player, _niggaCrew));
-		
-		_distanceTravelled.setPosition(_cam.getViewPositionX()-_cam.getViewWidth()*0.5f, -_cam.getViewHeight()*0.5f/*4f*/ + _niggaIndicator.getHeight(), -1f);
+		*/
+		_distanceTravelled.setPosition(_cam.getViewPositionX()-_cam.getViewWidth()*0.5f, -_cam.getViewHeight()*0.5f/* + _niggaIndicator.getHeight()*/, -1f);
 		_distanceTravelled.build(getApplication().getAssets(), _player.getDistanceTravelled());
 		
 		_goodBonusGui.setPosition(_syringeBackground.getPositionX() + _syringeBackground.getWidth(), -_cam.getViewHeight()*0.5f, -1f);

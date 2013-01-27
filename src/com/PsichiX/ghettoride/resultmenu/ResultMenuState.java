@@ -139,7 +139,7 @@ public class ResultMenuState extends State {
 		public void build(XeAssets assets, String str) {
 			Font font = (Font)assets.get(R.raw.badaboom_font, Font.class);
 			Material mat = (Material)assets.get(R.raw.red_font_mat, Material.class);
-			float[] color = { 1f, 0f, 0f, 1f};
+			float[] color = { 1f, 1f, 1f, 1f};
 			mat.setPropertyVec("uColor",  color);
 			build(str, font, mat,
 					Font.Alignment.CENTER,
