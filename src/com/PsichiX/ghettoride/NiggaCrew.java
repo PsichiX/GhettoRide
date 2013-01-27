@@ -33,7 +33,7 @@ public class NiggaCrew extends ActorSprite implements ICollidable{
 	@Override
 	public void onUpdate(float dt) {
 		_animator.update(dt, 1.0f);
-		setSize(getWidth() * 0.8f, getHeight() * 0.1f);
+		setSize(getWidth() /** 0.8f*/, getHeight() /** 0.8f*/);
 		setOffsetFromSize(1.0f, 1.0f);
 		
 		_posX = getPositionX() + NIGGA_CREW_SPEED*dt;
