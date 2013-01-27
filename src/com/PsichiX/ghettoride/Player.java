@@ -1,7 +1,6 @@
 package com.PsichiX.ghettoride;
 
 import android.graphics.RectF;
-import android.util.Log;
 
 import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorSprite;
 import com.PsichiX.XenonCoreDroid.Framework.Actors.IActor;
@@ -32,20 +31,26 @@ public class Player extends ActorSprite implements ICollidable {
 	private float _posX = 0.0f;
 	private float _posY = 0.0f;
 	
-	public static float MAX_SPEED_X = 500f;//1000f;
-	public static float MIN_SPEED_X = 50f;
-	private float _spdX = 250f;//500f;
+	private float ADRENALIN_LEVEL = 0.8f;
+	private float WORK_AREA;
+	private float _spdX = 100f;
 	private float _spdY = -50f;
 	private FramesSequence.Animator _animator;
 	
 	private boolean isOnGround = false;
 	private boolean isRollin = false;
 	
+	private NiggaCrew niggaCrew;
+	
 	private float floorTop = 0f;
 	
+	private float obstacleTime = 0f;
+	private float adrenalineTime = 0f;
 	private float stopBonusTime = 0f;
 	private float goodBonusTime = 0f;
 	private float jumpBonusTime = 0f;
+	
+	private float deltaAdrenaline = -0.02f;
 	
 	public Player(XeAssets assets) {
 		super(null);
@@ -57,13 +62,20 @@ public class Player extends ActorSprite implements ICollidable {
 		_animator = new FramesSequence.Animator(null, this);
 	}
 	
-	public void setAnimation(FramesSequence anim)
-	{
+	public void setAnimation(FramesSequence anim) {
 		_animator.setOwner(anim);
 	}
 	
-	private float lastTouchDownY = 0f;
+	public void setNiggaCrew(NiggaCrew niggaCrew) {
+		this.niggaCrew = niggaCrew;
+	}
 	
+	public void calculate() {
+		Camera2D cam = (Camera2D)getScene().getCamera();
+		WORK_AREA = cam.getViewWidth()*0.75f;
+	}
+	
+	private float lastTouchDownY = 0f;
 	private float MIN_INPUT_DIFF = 20f;
 	@Override
 	public void onInput(Touches ev) {
@@ -89,22 +101,6 @@ public class Player extends ActorSprite implements ICollidable {
 				lastTouchDownY = -999f;
 			}
 		}
-		/*
-		Touch touchUp = ev.getTouchByState(Touch.State.UP);
-		if(touchUp != null)
-		{
-			Camera2D cam = (Camera2D)getScene().getCamera();
-			float[] worldLoc = cam.convertLocationScreenToWorld(touchUp.getX(), touchUp.getY(), -1f);
-			//if(isTouchDownPlayer) {
-				if(worldLoc[1] < lastTouchDownY) {
-					jump();
-				} else if(worldLoc[1] > lastTouchDownY) {
-					fall();
-				}
-			//}
-			//isTouchDownPlayer = false;
-		}
-		*/
 	}
 	
 	@Override
@@ -116,7 +112,8 @@ public class Player extends ActorSprite implements ICollidable {
 		_timePlayed += dt;
 		
 		_posY -= _spdY * dt;
-		_posX += _spdX * dt;
+		//_posX += _spdX * dt;
+		_posX = niggaCrew.getPositionX() + WORK_AREA*ADRENALIN_LEVEL - 1;
 		//Log.d("event", "_posY: " + _posY);
 		if(!isOnGround) {
 			flying(dt);
@@ -128,7 +125,7 @@ public class Player extends ActorSprite implements ICollidable {
 		
 		_animator.update(dt, 1.0f);
 		if(stopBonusTime == 0f)
-			addSpeed(-dt*0.02f*MAX_SPEED_X);
+			addAdrenaline(dt*deltaAdrenaline);
 		
 		decreaseBonus(dt);
 	}
@@ -136,8 +133,10 @@ public class Player extends ActorSprite implements ICollidable {
 	private void decreaseBonus(float dt) {
 		if(stopBonusTime > 0f) {
 			stopBonusTime -= dt;
-			if(stopBonusTime < 0f)
+			if(stopBonusTime < 0f) {
 				stopBonusTime = 0f;
+				deltaAdrenaline = -0.02f;
+			}
 		}
 		
 		if(goodBonusTime > 0f) {
@@ -148,8 +147,25 @@ public class Player extends ActorSprite implements ICollidable {
 		
 		if(jumpBonusTime > 0f) {
 			jumpBonusTime -= dt;
-			if(jumpBonusTime < 0f)
+			if(jumpBonusTime < 0f) {
 				jumpBonusTime = 0f;
+			}
+		}
+		
+		if(adrenalineTime > 0f) {
+			adrenalineTime -= dt;
+			if(adrenalineTime < 0f) {
+				adrenalineTime = 0f;
+				deltaAdrenaline = -0.02f;
+			}
+		}
+		
+		if(obstacleTime > 0f) {
+			obstacleTime -= dt;
+			if(obstacleTime < 0f) {
+				obstacleTime = 0f;
+				deltaAdrenaline = -0.02f;
+			}
 		}
 	}
 	
@@ -165,7 +181,6 @@ public class Player extends ActorSprite implements ICollidable {
 	}
 	
 	private void fall() {
-		Log.d("event", "fall " + isOnGround + " " +  _posY + " " + floorTop);
 		if(isOnGround && _posY != floorTop) {
 			_posY += 0.1f;
 			_histPosY = _posY;
@@ -221,45 +236,67 @@ public class Player extends ActorSprite implements ICollidable {
 
 	@Override
 	public void onCollision(ICollidable o) {
-		if(o instanceof Platform) {
+		if(o instanceof Platform) 
+		{
 			if(_histPosY <= _posY && _histPosY <= o.getRecf().top) {
 				touchGround(o.getRecf().top);
 				isOnGround = true;
 			}
-		} else if(o instanceof AdrenalinTabs) {
+		} 
+		else if(o instanceof AdrenalinTabs) 
+		{
 			getManager().detach((IActor) o);
-			addSpeed(0.25f*MAX_SPEED_X);
-		} else if(o instanceof StopTab) {
+			//addAdrenaline(0.2f);
+			adrenalineTime += 3f;
+			deltaAdrenaline = 0.1f;
+		} 
+		else if(o instanceof StopTab) 
+		{
 			getManager().detach((IActor) o);
 			stopBonusTime += 5f;
-			addSpeed(0.1f*MAX_SPEED_X);
-		} else if(o instanceof GoodTabs) {
+			//addAdrenaline(0.1f);
+			deltaAdrenaline = 0f;
+		}
+		else if(o instanceof GoodTabs) 
+		{
 			getManager().detach((IActor) o);
 			goodBonusTime += 5f;
-			addSpeed(0.1f*MAX_SPEED_X);
-		} else if(o instanceof JumpTab) {
+			//addAdrenaline(0.1f);
+		} 
+		else if(o instanceof JumpTab) 
+		{
 			getManager().detach((IActor) o);
 			jumpBonusTime += 5f;
-			addSpeed(0.1f*MAX_SPEED_X);
-		} else if(o instanceof Obstacle) {
-			if(((Obstacle)o).inactiv() && goodBonusTime == 0f)
-				addSpeed(-0.1f*MAX_SPEED_X);
-		} else if(o instanceof Bullet) {
+			//addAdrenaline(0.1f);
+		} 
+		else if(o instanceof Obstacle) 
+		{
+			if(((Obstacle)o).inactiv() && goodBonusTime == 0f) {
+				//addAdrenaline(-0.1f);
+				obstacleTime += 1f;
+				deltaAdrenaline = -0.06f;
+			}
+		} 
+		else if(o instanceof Bullet) 
+		{
 			getManager().detach((IActor) o);
-			addSpeed(-0.01f*MAX_SPEED_X);
-		} else if(o instanceof NiggaCrew) {
+			//addAdrenaline(-0.1f);
+			obstacleTime += 3f;
+			deltaAdrenaline = -0.04f;
+		} 
+		else if(o instanceof NiggaCrew) 
+		{
 			resetSpeed();
-			((NiggaCrew)o).resetSpeed();
 			isAlive = false;
 		} 
 	}
 	
-	private void addSpeed(float deltaSpeed) {
-		_spdX += deltaSpeed;
-		if(_spdX < MIN_SPEED_X)
-			_spdX = MIN_SPEED_X;
-		if(_spdX > MAX_SPEED_X)
-			_spdX = MAX_SPEED_X;
+	private void addAdrenaline(float deltaSpeed) {
+		ADRENALIN_LEVEL += deltaSpeed;
+		if(ADRENALIN_LEVEL < 0f)
+			ADRENALIN_LEVEL = 0f;
+		if(ADRENALIN_LEVEL > 1f)
+			ADRENALIN_LEVEL = 1f;
 	}
 	
 	private void resetSpeed() {
@@ -267,7 +304,7 @@ public class Player extends ActorSprite implements ICollidable {
 	}
 	
 	public float getNormPlayerSpeed() {
-		return _spdX/MAX_SPEED_X;
+		return ADRENALIN_LEVEL;
 	}
 	
 	public float getDistanceTravelled() {

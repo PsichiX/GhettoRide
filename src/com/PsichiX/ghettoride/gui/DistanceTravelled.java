@@ -11,7 +11,8 @@ public class DistanceTravelled extends Text {
 	public void build(XeAssets assets, float distance) {
 		Font font = (Font)assets.get(R.raw.badaboom_font, Font.class);
 		Material mat = (Material)assets.get(R.raw.badaboom_material, Material.class);
-		
+		float[] color = { 1f, 1f, 1f, 1f};
+		mat.setPropertyVec("uColor",  color);
 		build(" " + String.format("%.1f", distance/100f) + "m dist travelled.",
 				font, mat,
 				Font.Alignment.TOP,

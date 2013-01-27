@@ -11,7 +11,8 @@ public class JumpBonusGui extends Text {
 	public void build(XeAssets assets, float distance) {
 		Font font = (Font)assets.get(R.raw.badaboom_font, Font.class);
 		Material mat = (Material)assets.get(R.raw.badaboom_material, Material.class);
-		
+		float[] color = { 1f, 1f, 1f, 1f};
+		mat.setPropertyVec("uColor",  color);
 		build("  J_Bns: " + String.format("%.1f", distance),
 				font, mat,
 				Font.Alignment.TOP,
@@ -22,7 +23,8 @@ public class JumpBonusGui extends Text {
 	public void build(XeAssets assets, int distance) {
 		Font font = (Font)assets.get(R.raw.badaboom_font, Font.class);
 		Material mat = (Material)assets.get(R.raw.badaboom_material, Material.class);
-		
+		float[] color = { 1f, 1f, 1f, 1f};
+		mat.setPropertyVec("uColor",  color);
 		build("  J_Bns: " + distance,
 				font, mat,
 				Font.Alignment.TOP,

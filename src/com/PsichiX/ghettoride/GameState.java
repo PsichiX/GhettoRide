@@ -70,6 +70,7 @@ public class GameState extends State implements CommandQueue.Delegate
 		
 		_scn = (Scene)getApplication().getAssets().get(R.raw.scene, Scene.class);
 		_cam = (Camera2D)_scn.getCamera();
+		_cam.setViewPosition(0f, 0f);
 		
 		_animSheet = (SpriteSheet)_theme.getAsset("animations", SpriteSheet.class);
 		_playerAnim.addFrame(new FramesSequence.Frame(_animSheet.getSubImage("player")));
@@ -96,7 +97,7 @@ public class GameState extends State implements CommandQueue.Delegate
 		_player.onAttach(_collmgr);
 		_player.setPosition(0, 0, -1);
 		
-		for(int i=0; i<5; i++) {
+		for(int i=0; i<3; i++) {
 			Platform tmp = new Platform(_theme);
 			_collmgr.attach(tmp);
 			_actors.attach(tmp);
@@ -115,13 +116,14 @@ public class GameState extends State implements CommandQueue.Delegate
 		floor2.setPosition(_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.5f);
 		floor2.onAttach(_collmgr);
 		
-		_niggaCrew = new NiggaCrew(getApplication().getAssets());
-		_niggaCrew.setPosition(_cam.getViewPositionX() - _cam.getViewWidth(), floor1.getRecf().top);
-		_niggaCrew.setPlayer(_player);
+		_niggaCrew = new NiggaCrew(_theme);
+		_niggaCrew.setPosition(-_cam.getViewWidth()*0.375f, floor1.getRecf().top);
 		_actors.attach(_niggaCrew);
 		_collmgr.attach(_niggaCrew);
 		_scn.attach(_niggaCrew);
 		
+		_niggaCrew.setPlayer(_player);
+		_player.setNiggaCrew(_niggaCrew);
 		_player.setFloorTop(floor1.getRecf().top);
 		
 		_actors.attach(_player);
@@ -129,6 +131,7 @@ public class GameState extends State implements CommandQueue.Delegate
 		_actors.attach(floor2);
 		
 		_scn.attach(_player);
+		_player.calculate();
 		_scn.attach(floor1);
 		_scn.attach(floor2);
 		
@@ -204,7 +207,10 @@ public class GameState extends State implements CommandQueue.Delegate
 		_cmds.run();
 		_actors.onUpdate(dt);
 		_collmgr.test();
-		_cam.setViewPosition(_player.getPositionX() + _cam.getViewWidth()*0.1f, 0);
+		
+		//_cam.setViewPosition(_player.getPositionX() + _cam.getViewWidth()*0.1f, 0);
+		_cam.setViewPosition(_niggaCrew.getPositionX() + _cam.getViewWidth()*0.375f, 0);
+		
 		_parallax.setArea(
 				_cam.getViewPositionX() - _cam.getViewWidth() * 1.0f,
 				_cam.getViewPositionY() - _cam.getViewHeight() * 1.0f,

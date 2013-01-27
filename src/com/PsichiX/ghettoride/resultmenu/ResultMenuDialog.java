@@ -2,21 +2,25 @@ package com.PsichiX.ghettoride.resultmenu;
 
 import android.util.Log;
 
-import com.PsichiX.XenonCoreDroid.XeAssets;
 import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorSprite;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Image;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Material;
 import com.PsichiX.XenonCoreDroid.XeApplication.Touch;
 import com.PsichiX.XenonCoreDroid.XeApplication.Touches;
+import com.PsichiX.ghettoride.GameState;
+import com.PsichiX.ghettoride.MainActivity;
 import com.PsichiX.ghettoride.R;
+import com.PsichiX.ghettoride.Theme;
 
 public class ResultMenuDialog extends ActorSprite {
-
-	public ResultMenuDialog(XeAssets assets) {
+	private Theme theme;
+	
+	public ResultMenuDialog(Theme th) {
 		super(null);
-		Material mat = (Material)assets.get(R.raw.result_menu_dialog, Material.class);
-		Image img = (Image)assets.get(R.drawable.result_menu_dialog, Image.class);
+		theme = th;
+		Material mat = (Material)theme.getOwner().get(R.raw.result_menu_dialog, Material.class);
+		Image img = (Image)theme.getOwner().get(R.drawable.result_menu_dialog, Image.class);
 		setMaterial(mat);
 		setSizeFromImage(img);
 		setOffsetFromSize(0f, 1f);
@@ -34,11 +38,11 @@ public class ResultMenuDialog extends ActorSprite {
 				if(worldLoc[0] > cam.getViewPositionX() - getWidth()*0.5f && 
 					worldLoc[0] < cam.getViewPositionX()) {
 					Log.d("TOUCH", "RESTART");
-					// RESTERT
+					MainActivity.app.changeState(new GameState(theme.getId()));
 				} else if(worldLoc[0] > cam.getViewPositionX() &&
 						worldLoc[0] < cam.getViewPositionX() + getWidth()*0.5f) {
 					Log.d("TOUCH", "TO MAIN MENU");
-					// TO MAIN MENU
+					MainActivity.app.popState();
 				}
 			}
 		}

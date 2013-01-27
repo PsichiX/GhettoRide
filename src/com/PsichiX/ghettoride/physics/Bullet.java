@@ -2,29 +2,34 @@ package com.PsichiX.ghettoride.physics;
 
 import android.graphics.RectF;
 
-import com.PsichiX.XenonCoreDroid.XeAssets;
 import com.PsichiX.XenonCoreDroid.XeUtils.MathHelper;
 import com.PsichiX.XenonCoreDroid.Framework.Actors.ActorSprite;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Image;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Material;
-import com.PsichiX.ghettoride.Player;
 import com.PsichiX.ghettoride.R;
+import com.PsichiX.ghettoride.Theme;
 
 public class Bullet extends ActorSprite implements ICollidable {
-	private float BULLET_SPEED = Player.MAX_SPEED_X*1.5f;
+	private float BULLET_SPEED;
 	private float BULLET_ROTATION = 360f;
 	
 	private float angle = 0f;
 	
-	public Bullet(XeAssets assets) {
+	private Theme theme;
+	
+	public Bullet(Theme theme) {
 		super(null);
-		Material mat = (Material)assets.get(R.raw.bullet_mat, Material.class);
-		Image img = (Image)assets.get(R.drawable.bullet, Image.class);
+		Material mat = (Material)theme.getOwner().get(R.raw.bullet_mat, Material.class);
+		Image img = (Image)theme.getOwner().get(R.drawable.bullet, Image.class);
 		setMaterial(mat);
 		setSizeFromImage(img);
 		//setOffsetFromSize(0f, 1f);
 		setOffsetFromSize(0.5f, 0.5f);
+	}
+	
+	public void setSpeed(float speed) {
+		BULLET_SPEED = speed;
 	}
 	
 	private float[] vec;

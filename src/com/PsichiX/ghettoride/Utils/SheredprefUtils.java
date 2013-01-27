@@ -39,6 +39,18 @@ public class SheredprefUtils
 		gameSharedPreferencesEditor.commit();
 	}
 	
+	public float getBestScore()
+	{
+		float unlockLevel = gameSharedPreferences.getFloat("best_score", 0f);
+		return unlockLevel;
+	}
+	
+	public void setBestScore(float bestScore)
+	{
+		gameSharedPreferencesEditor.putFloat("best_score", bestScore);
+		gameSharedPreferencesEditor.commit();
+	}
+	
 	public SharedPreferences.Editor getEditor(){
 		return gameSharedPreferencesEditor;
 	}
