@@ -120,6 +120,8 @@ public class Player extends ActorSprite implements ICollidable {
 		if(stopBonusTime == 0f)
 			addAdrenaline(dt*deltaAdrenaline);
 		
+		isFalldown();
+		
 		decreaseBonus(dt);
 	}
 	
@@ -178,6 +180,14 @@ public class Player extends ActorSprite implements ICollidable {
 			_posY += 0.1f;
 			_histPosY = _posY;
 			isOnGround = false;
+		}
+	}
+	
+	private void isFalldown() {
+		Camera2D cam = (Camera2D)getScene().getCamera();
+		if(getPositionY() > cam.getViewPositionY() + 0.5f*cam.getViewWidth() + 2*getWidth()) {
+			resetSpeed();
+			isAlive = false;
 		}
 	}
 	

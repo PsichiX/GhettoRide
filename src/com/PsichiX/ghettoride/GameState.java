@@ -137,20 +137,28 @@ public class GameState extends State implements CommandQueue.Delegate
 		}
 		
 		Floor floor1 = new Floor(_theme);
-		//floor1.setSize(_cam.getViewWidth(), _cam.getViewHeight()*0.1f);
-		floor1.setSize(_cam.getViewWidth(), floor1.getHeight());
-		floor1.setOffsetFromSize(0f, 0f);
-		//floor1.setPosition(-_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.5f);
-		floor1.setPosition(-_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.4f);
-		floor1.onAttach(_collmgr);
+		floor1.setPosition(-_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.55f);
+		_collmgr.attach(floor1);
+		_actors.attach(floor1);
+		_scn.attach(floor1);
 		
 		Floor floor2 = new Floor(_theme);
-		//floor2.setSize(_cam.getViewWidth(), _cam.getViewHeight()*0.1f);
-		floor2.setSize(_cam.getViewWidth(), floor2.getHeight());
-		floor2.setOffsetFromSize(0f, 0f);
-		//floor2.setPosition(_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.5f);
-		floor2.setPosition(_cam.getViewWidth()*0.5f, _cam.getViewHeight()*0.4f);
-		floor2.onAttach(_collmgr);
+		floor2.setPosition(-_cam.getViewWidth()*0.5f + floor1.getWidth(), _cam.getViewHeight()*0.55f);
+		_collmgr.attach(floor2);
+		_actors.attach(floor2);
+		_scn.attach(floor2);
+		
+		Floor floor3 = new Floor(_theme);
+		floor3.setPosition(-_cam.getViewWidth()*0.5f + floor1.getWidth()*2, _cam.getViewHeight()*0.55f);
+		_collmgr.attach(floor3);
+		_actors.attach(floor3);
+		_scn.attach(floor3);
+		
+		Floor floor4 = new Floor(_theme);
+		floor4.setPosition(-_cam.getViewWidth()*0.5f + floor1.getWidth()*3, _cam.getViewHeight()*0.55f);
+		_collmgr.attach(floor4);
+		_actors.attach(floor4);
+		_scn.attach(floor4);
 		
 		_niggaCrew = new NiggaCrew(_theme, _playerBlackAnim);
 		_niggaCrew.setPosition(-_cam.getViewWidth()*0.4f, floor1.getRecf().top);
@@ -163,13 +171,9 @@ public class GameState extends State implements CommandQueue.Delegate
 		_player.setFloorTop(floor1.getRecf().top);
 		
 		_actors.attach(_player);
-		_actors.attach(floor1);
-		_actors.attach(floor2);
 		
 		_scn.attach(_player);
 		_player.calculate();
-		_scn.attach(floor1);
-		_scn.attach(floor2);
 		
 		_syringeBackground = new SyringeBackgroundGui(_theme);
 		_syringeBackground.setPosition(_cam.getViewPositionX(), -_cam.getViewHeight()*0.4f, -1f);
