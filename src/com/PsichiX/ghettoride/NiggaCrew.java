@@ -10,7 +10,7 @@ import com.PsichiX.ghettoride.physics.CollisionManager;
 import com.PsichiX.ghettoride.physics.ICollidable;
 
 public class NiggaCrew extends ActorSprite implements ICollidable{
-	private float NIGGA_CREW_SPEED = 300f;
+	private float NIGGA_CREW_SPEED = 200f;//300f;
 	private float _posX;
 	
 	private CollisionManager collisionManager;

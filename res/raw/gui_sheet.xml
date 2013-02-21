@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:48a6bc4fb9726a4d0da1ad61e2027d03$ -->
+<TextureAtlas imagePath="drawable/gui_sheet" materialPath="raw/gui_material">
+    <SubTexture name="adrenaline_tab_btn" x="227" y="54" width="21" height="50"/>
+    <SubTexture name="good_tab_btn" x="204" y="54" width="21" height="50"/>
+    <SubTexture name="jump_tab_btn" x="227" y="2" width="21" height="50"/>
+    <SubTexture name="stop_tab_btn" x="204" y="2" width="21" height="50"/>
+    <SubTexture name="syringe_background" x="2" y="54" width="200" height="50"/>
+    <SubTexture name="syringe_front" x="2" y="2" width="200" height="50"/>
+</TextureAtlas>

@@ -14,8 +14,8 @@ void main()
    gl_Position = (uMatViewProjection * uMatModel) * vec4(vPosition, 0.0, 1.0);
 }
 
-   </Vertex>
-   <Fragment>
+	</Vertex>
+	<Fragment>
 
 precision mediump float;
 varying vec2 coord;
@@ -27,7 +27,7 @@ void main()
    gl_FragColor = col;
 }
 
-   </Fragment>
+	</Fragment>
    <Data>
       <Attribute name="vPosition" />
       <Attribute name="vTexCoord" />

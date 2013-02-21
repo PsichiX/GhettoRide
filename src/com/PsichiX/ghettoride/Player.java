@@ -7,6 +7,7 @@ import com.PsichiX.XenonCoreDroid.Framework.Actors.IActor;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Camera2D;
 import com.PsichiX.XenonCoreDroid.XeApplication.Touch;
 import com.PsichiX.XenonCoreDroid.XeApplication.Touches;
+import com.PsichiX.ghettoride.common.Vibration;
 import com.PsichiX.ghettoride.physics.AdrenalinTabs;
 import com.PsichiX.ghettoride.physics.Bullet;
 import com.PsichiX.ghettoride.physics.CollisionManager;
@@ -29,25 +30,29 @@ public class Player extends ActorSprite implements ICollidable {
 	private float _posY = 0.0f;
 	
 	private float ADRENALIN_LEVEL = 0.8f;
+	private float deltaAdrenaline = -0.02f;
+	
 	private float WORK_AREA;
 	private float _spdX = 100f;
 	private float _spdY = -50f;
 	private FramesSequence.Animator _animator;
 	
 	private boolean isOnGround = false;
-	private boolean isRollin = false;
 	
 	private NiggaCrew niggaCrew;
 	
 	private float floorTop = 0f;
 	
+	private int adrenalineTabsCnt = 0;
+	private int stopTabsCnt = 0;
+	private int godTabsCnt = 0;
+	private int jumpTabsCnt = 0;
+	
 	private float obstacleTime = 0f;
 	private float adrenalineTime = 0f;
 	private float stopBonusTime = 0f;
-	private float goodBonusTime = 0f;
+	private float godBonusTime = 0f;
 	private float jumpBonusTime = 0f;
-	
-	private float deltaAdrenaline = -0.02f;
 	
 	public Player(FramesSequence anim) {
 		super(null);
@@ -134,10 +139,10 @@ public class Player extends ActorSprite implements ICollidable {
 			}
 		}
 		
-		if(goodBonusTime > 0f) {
-			goodBonusTime -= dt;
-			if(goodBonusTime < 0f)
-				goodBonusTime = 0f;
+		if(godBonusTime > 0f) {
+			godBonusTime -= dt;
+			if(godBonusTime < 0f)
+				godBonusTime = 0f;
 		}
 		
 		if(jumpBonusTime > 0f) {
@@ -165,7 +170,7 @@ public class Player extends ActorSprite implements ICollidable {
 	}
 	
 	private void jump() {
-		if(isOnGround && !isRollin) {
+		if(isOnGround) {
 			isOnGround = false;
 			if(jumpBonusTime > 0) {
 				_spdY = 1000f;
@@ -249,40 +254,37 @@ public class Player extends ActorSprite implements ICollidable {
 		else if(o instanceof AdrenalinTabs) 
 		{
 			getManager().detach((IActor) o);
-			//addAdrenaline(0.2f);
-			//adrenalineTime += 3f;
-			adrenalineTime = 3f;
-			deltaAdrenaline = 0.1f;
+			//adrenalineTime = 3f;
+			//deltaAdrenaline = 0.1f;
+			adrenalineTabsCnt++;
 		} 
 		else if(o instanceof StopTab) 
 		{
 			getManager().detach((IActor) o);
-			//stopBonusTime += 5f;
-			stopBonusTime = 5f;
-			//addAdrenaline(0.1f);
-			deltaAdrenaline = 0f;
+			//stopBonusTime = 5f;
+			//deltaAdrenaline = 0f;
+			stopTabsCnt++;
 		}
 		else if(o instanceof GoodTabs) 
 		{
 			getManager().detach((IActor) o);
-			//goodBonusTime += 5f;
-			goodBonusTime = 5f;
-			//addAdrenaline(0.1f);
+			//goodBonusTime = 5f;
+			godTabsCnt++;
 		} 
 		else if(o instanceof JumpTab) 
 		{
 			getManager().detach((IActor) o);
-			//jumpBonusTime += 5f;
-			jumpBonusTime = 5f;
-			//addAdrenaline(0.1f);
+			//jumpBonusTime = 5f;
+			jumpTabsCnt++;
 		} 
 		else if(o instanceof Obstacle) 
 		{
-			if(((Obstacle)o).inactiv() && goodBonusTime == 0f) {
+			if(((Obstacle)o).inactiv() && godBonusTime == 0f) {
 				//addAdrenaline(-0.1f);
 				//obstacleTime += 3f;
 				obstacleTime = 3f;
 				deltaAdrenaline = -0.08f;
+				Vibration.getInstance().vibrate(1);
 			}
 		}
 		else if(o instanceof Bullet) 
@@ -292,6 +294,7 @@ public class Player extends ActorSprite implements ICollidable {
 			//obstacleTime += 3f;
 			obstacleTime = 3f;
 			deltaAdrenaline = -0.08f;
+			Vibration.getInstance().vibrate(2);
 		} 
 		else if(o instanceof NiggaCrew) 
 		{
@@ -320,16 +323,24 @@ public class Player extends ActorSprite implements ICollidable {
 		return _distanceTraveled;
 	}
 	
+	public float getAdrenalineBonus() {
+		return adrenalineTime;
+	}
+	
 	public float getStopBonus() {
 		return stopBonusTime;
 	}
 	
 	public float getGoodBonus() {
-		return goodBonusTime;
+		return godBonusTime;
 	}
 	
 	public float getJumpBonus() {
 		return jumpBonusTime;
+	}
+	
+	public float getDeltaAdrenaline() {
+		return deltaAdrenaline;
 	}
 	
 	public boolean isAlive() {
@@ -341,5 +352,55 @@ public class Player extends ActorSprite implements ICollidable {
 		result.setDistanceTravelled(_distanceTraveled);
 		result.setTimePlayed(_timePlayed);
 		return result;
+	}
+	
+	public void takeTab(TabsType type) {
+		switch (type)
+		{
+		case ADRENALINE:
+			if(adrenalineTabsCnt > 0) {
+				adrenalineTabsCnt--;
+				adrenalineTime = 1.5f;
+				
+				deltaAdrenaline = 0.1f;
+			}
+			break;
+		case GOD:
+			if(godTabsCnt > 0) {
+				godTabsCnt--;
+				godBonusTime = 3f;
+			}
+			break;
+		case STOP:
+			if(stopTabsCnt > 0) {
+				stopTabsCnt--;
+				stopBonusTime = 3f;
+				
+				deltaAdrenaline = 0f;
+			}
+			break;
+		case JUMP:
+			if(jumpTabsCnt > 0) {
+				jumpTabsCnt--;
+				jumpBonusTime = 3f;
+			}
+			break;
+		}
+	}
+
+	public int getAdrenalineTabsCnt() {
+		return adrenalineTabsCnt;
+	}
+
+	public int getStopTabsCnt() {
+		return stopTabsCnt;
+	}
+
+	public int getGoodTabsCnt() {
+		return godTabsCnt;
+	}
+
+	public int getJumpTabsCnt() {
+		return jumpTabsCnt;
 	}
 }

@@ -3,5 +3,6 @@
     <Asset name="animations" id="raw/animations_sheet" />
 	<Asset name="animations_black" id="raw/animations_black_sheet" />
     <Asset name="backgrounds" id="raw/background_sheet" />
+    <Asset name="gui" id="raw/gui_sheet" />
 	<!-- Asset name="static" id="raw/static_sheet" /-->
 </Theme>

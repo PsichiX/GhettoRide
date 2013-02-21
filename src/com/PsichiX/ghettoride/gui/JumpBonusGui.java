@@ -13,7 +13,7 @@ public class JumpBonusGui extends Text {
 		Material mat = (Material)assets.get(R.raw.badaboom_material, Material.class);
 		float[] color = { 1f, 1f, 1f, 1f};
 		mat.setPropertyVec("uColor",  color);
-		build("  J_Bns: " + String.format("%.1f", distance),
+		build("  J_Bns: " + String.format("%.3f", distance),
 				font, mat,
 				Font.Alignment.TOP,
 				Font.Alignment.RIGHT,

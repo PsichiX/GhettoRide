@@ -6,6 +6,7 @@ import com.PsichiX.XenonCoreDroid.Framework.Utils.Utils;
 import com.PsichiX.XenonCoreDroid.Framework.Graphics.Graphics;
 import com.PsichiX.ghettoride.Utils.SheredprefUtils;
 import com.PsichiX.ghettoride.common.LevelInfo;
+import com.PsichiX.ghettoride.common.Vibration;
 import com.PsichiX.ghettoride.mainmenu.MainMenuState;
 
 public class MainActivity extends XeActivity
@@ -28,10 +29,11 @@ public class MainActivity extends XeActivity
 		levels = new LevelInfo();
 		levels.getLevels().add(new LevelInfo.Level(1, "Level 1 - Port", R.raw.default_theme, 2000.0f));
 		
+		Vibration.getInstance().Init(getApplicationContext());
 		Utils.initModule(getApplicationCore().getAssets());
 		Graphics.initModule(getApplicationCore().getAssets(), getApplicationCore().getPhoton());
 		GlobalRandom.init();
-		SheredprefUtils.getInstance().Init(this);
+		SheredprefUtils.getInstance().Init(getApplicationContext());
 		
 		getApplicationCore().getAssets().registerClass(Theme.class);
 		getApplicationCore().getTimer().setFixedStep(1000 / 25);

@@ -8,12 +8,10 @@ import com.PsichiX.XenonCoreDroid.Framework.Actors.*;
 import com.PsichiX.XenonCoreDroid.XeSense.EventData;
 import com.PsichiX.XenonCoreDroid.XeUtils.*;
 import com.PsichiX.ghettoride.gui.DistanceTravelled;
-import com.PsichiX.ghettoride.gui.GoodBonusGui;
-import com.PsichiX.ghettoride.gui.JumpBonusGui;
-import com.PsichiX.ghettoride.gui.NiggaIndicator;
-import com.PsichiX.ghettoride.gui.StopBonusGui;
 import com.PsichiX.ghettoride.gui.SyringeBackgroundGui;
 import com.PsichiX.ghettoride.gui.SyringeFrontGui;
+import com.PsichiX.ghettoride.gui.TabAmmountGui;
+import com.PsichiX.ghettoride.gui.TabButtonGui;
 import com.PsichiX.XenonCoreDroid.XeEcho;
 import com.PsichiX.ghettoride.physics.CollisionManager;
 import com.PsichiX.ghettoride.resultmenu.ResultMenuState;
@@ -24,9 +22,18 @@ public class GameState extends State implements CommandQueue.Delegate
 	private SyringeBackgroundGui _syringeBackground;
 	//private NiggaIndicator _niggaIndicator;
 	private DistanceTravelled _distanceTravelled;
-	private GoodBonusGui _goodBonusGui;
-	private StopBonusGui _stopBonusGui;
-	private JumpBonusGui _jumpBonusGui;
+	
+	private TabAmmountGui _adrenalinBonusGui;
+	private TabButtonGui _adrenalineBtnGui;
+	
+	private TabAmmountGui _godBonusGui;
+	private TabButtonGui _godBtnGui;
+	
+	private TabAmmountGui _stopBonusGui;
+	private TabButtonGui _stopBtnGui;
+	
+	private TabAmmountGui _jumpBonusGui;
+	private TabButtonGui _jumpBtnGui;
 	
 	private Camera2D _cam;
 	private Scene _scn;
@@ -63,7 +70,6 @@ public class GameState extends State implements CommandQueue.Delegate
 	{
 		ULTIMATE_CAPSULE_DIST = _ultCapsDist;
 		
-		Log.d("STATE", "ENTER " + getClass().toString());
 		_sorter = new ShapeComparator.DescZ();
 		_actors = new ActorsManager();
 		_cmds = new CommandQueue();
@@ -176,49 +182,46 @@ public class GameState extends State implements CommandQueue.Delegate
 		_player.calculate();
 		
 		_syringeBackground = new SyringeBackgroundGui(_theme);
-		_syringeBackground.setPosition(_cam.getViewPositionX(), -_cam.getViewHeight()*0.4f, -1f);
 		_scn.attach(_syringeBackground);
 		
 		_syringeFront = new SyringeFrontGui(getApplication().getAssets());
-		_syringeFront.setPosition(_cam.getViewPositionX(), -_cam.getViewHeight()*0.4f, -1f);
 		_scn.attach(_syringeFront);
-		/*
-		_niggaIndicator = new NiggaIndicator();
-		_niggaIndicator.setPosition(_cam.getViewPositionX()-_cam.getViewWidth()*0.5f, -_cam.getViewHeight()*0.5f, -1f);
-		_niggaIndicator.build(getApplication().getAssets(), getNiggaDistanceX(_player, _niggaCrew));
-		_scn.attach(_niggaIndicator);
-		*/
+		
 		_distanceTravelled = new DistanceTravelled();
-		_distanceTravelled.setPosition(_cam.getViewPositionX()-_cam.getViewWidth()*0.5f, -_cam.getViewHeight()*0.5f /*+ _niggaIndicator.getHeight()*/, -1f);
-		_distanceTravelled.build(getApplication().getAssets(), _player.getDistanceTravelled());
 		_scn.attach(_distanceTravelled);
 		
-		_goodBonusGui = new GoodBonusGui();
-		_goodBonusGui.setPosition(_syringeBackground.getPositionX() + _syringeBackground.getWidth(), -_cam.getViewHeight()*0.5f, -1f);
-		_goodBonusGui.build(getApplication().getAssets(), _player.getGoodBonus());
-		_scn.attach(_goodBonusGui);
+		SpriteSheet _guiSheet = (SpriteSheet)_theme.getAsset("gui", SpriteSheet.class);
 		
-		_stopBonusGui = new StopBonusGui();
-		_stopBonusGui.setPosition(_syringeBackground.getPositionX() + _syringeBackground.getWidth(), -_cam.getViewHeight()*0.5f + _goodBonusGui.getHeight(), -1f);
-		_stopBonusGui.build(getApplication().getAssets(), _player.getStopBonus());
+		_adrenalineBtnGui = new TabButtonGui(_theme, _guiSheet.getSubImage("adrenaline_tab_btn"));
+		_scn.attach(_adrenalineBtnGui);
+		
+		_adrenalinBonusGui = new TabAmmountGui();
+		_scn.attach(_adrenalinBonusGui);
+		
+		_godBtnGui = new TabButtonGui(_theme, _guiSheet.getSubImage("good_tab_btn"));
+		_scn.attach(_godBtnGui);
+		
+		_godBonusGui = new TabAmmountGui();
+		_scn.attach(_godBonusGui);
+		
+		_stopBtnGui = new TabButtonGui(_theme, _guiSheet.getSubImage("stop_tab_btn"));
+		_scn.attach(_stopBtnGui);
+		
+		_stopBonusGui = new TabAmmountGui();
 		_scn.attach(_stopBonusGui);
 		
-		_jumpBonusGui = new JumpBonusGui();
-		_jumpBonusGui.setPosition(_syringeBackground.getPositionX() + _syringeBackground.getWidth(), -_cam.getViewHeight()*0.5f + _goodBonusGui.getHeight()*2, -1f);
-		_jumpBonusGui.build(getApplication().getAssets(), _player.getJumpBonus());
+		_jumpBtnGui = new TabButtonGui(_theme, _guiSheet.getSubImage("jump_tab_btn"));
+		_scn.attach(_jumpBtnGui);
+		
+		_jumpBonusGui = new TabAmmountGui();
 		_scn.attach(_jumpBonusGui);
 		
 		getApplication().getTimer().reset();
 	}
 	
-	private float getNiggaDistanceX(ActorSprite a, ActorSprite b) {
-		return a.getPositionX() - b.getPositionX() - b.getWidth();
-	}
-	
 	@Override
 	public void onExit()
 	{
-		Log.d("STATE", "EXIT " + getClass().toString());
 		Platform.LAST_PLATFORM_POS_X = 0f;
 		_scn.detachAll();
 		_actors.detachAll();
@@ -229,6 +232,31 @@ public class GameState extends State implements CommandQueue.Delegate
 	@Override
 	public void onInput(Touches ev)
 	{
+		Touch touch = ev.getTouchByState(Touch.State.DOWN);
+		if(touchHit(touch, _cam, _adrenalineBtnGui) || touchHit(touch, _cam, _adrenalinBonusGui)) {
+			Log.d("TOUCH", "adrenalin btn");
+			_player.takeTab(TabsType.ADRENALINE);
+			return;
+		}
+		
+		if(touchHit(touch, _cam, _godBtnGui) || touchHit(touch, _cam, _godBonusGui)) {
+			Log.d("TOUCH", "god btn");
+			_player.takeTab(TabsType.GOD);
+			return;
+		}
+		
+		if(touchHit(touch, _cam, _stopBtnGui) || touchHit(touch, _cam, _stopBonusGui)) {
+			Log.d("TOUCH", "stop btn");
+			_player.takeTab(TabsType.STOP);
+			return;
+		}
+		
+		if(touchHit(touch, _cam, _jumpBtnGui) || touchHit(touch, _cam, _jumpBonusGui)) {
+			Log.d("TOUCH", "jump btn");
+			_player.takeTab(TabsType.JUMP);
+			return;
+		}
+		
 		if(!_finishing)
 			_actors.onInput(ev);
 	}
@@ -291,26 +319,70 @@ public class GameState extends State implements CommandQueue.Delegate
 		}
 	}
 	
+	float[] notUsedColor = { 1f, 1f, 1f, 1f};
+	float[] usedColor = { 1f, 1f, 0f, 0f};
+	
 	private void updataGUI() {
 		_syringeBackground.setPosition(_cam.getViewPositionX(), _cam.getViewPositionY()-_cam.getViewHeight()*0.4f);
 		
 		_syringeFront.setPosition(_cam.getViewPositionX(), _cam.getViewPositionY()-_cam.getViewHeight()*0.4f);
 		_syringeFront.setSize(_player.getNormPlayerSpeed());
-		/*
-		_niggaIndicator.setPosition(_cam.getViewPositionX()-_cam.getViewWidth()*0.5f, -_cam.getViewHeight()*0.5f);
-		_niggaIndicator.build(getApplication().getAssets(), getNiggaDistanceX(_player, _niggaCrew));
-		*/
-		_distanceTravelled.setPosition(_cam.getViewPositionX()-_cam.getViewWidth()*0.5f, -_cam.getViewHeight()*0.5f/* + _niggaIndicator.getHeight()*/, -1f);
+		
+		_distanceTravelled.setPosition(_syringeBackground.getPositionX() + _syringeBackground.getWidth()/*_cam.getViewPositionX()-_cam.getViewWidth()*0.5f*/, -_cam.getViewHeight()*0.5f/* + _niggaIndicator.getHeight()*/, -1f);
 		_distanceTravelled.build(getApplication().getAssets(), _player.getDistanceTravelled());
 		
-		_goodBonusGui.setPosition(_syringeBackground.getPositionX() + _syringeBackground.getWidth(), -_cam.getViewHeight()*0.5f, -1f);
-		_goodBonusGui.build(getApplication().getAssets(), _player.getGoodBonus());
+		//float tabBonusGuiPosX = _syringeBackground.getPositionX() + _syringeBackground.getWidth();
+		float tabBonusGuiPosX = _cam.getViewPositionX() - _cam.getViewWidth()*0.5f;
+		float tabBonusGuiPosY = -_cam.getViewHeight()*0.5f;
+		float tabTopMargin = _cam.getViewHeight()*0.05f;
 		
-		_stopBonusGui.setPosition(_syringeBackground.getPositionX() + _syringeBackground.getWidth(), -_cam.getViewHeight()*0.5f + _goodBonusGui.getHeight(), -1f);
-		_stopBonusGui.build(getApplication().getAssets(), _player.getStopBonus());
+		float tabNrBonusGuiPosX = tabBonusGuiPosX + _adrenalineBtnGui.getWidth();
 		
-		_jumpBonusGui.setPosition(_syringeBackground.getPositionX() + _syringeBackground.getWidth(), -_cam.getViewHeight()*0.5f + _goodBonusGui.getHeight()*2, -1f);
-		//_jumpBonusGui.build(getApplication().getAssets(), _player.getJumpBonus());
-		_jumpBonusGui.build(getApplication().getAssets(), getApplication().getPhoton().getDrawCallsCount());
+		_adrenalinBonusGui.setPosition(tabNrBonusGuiPosX, tabBonusGuiPosY, -1f);
+		_adrenalinBonusGui.build(getApplication().getAssets(), _player.getAdrenalineTabsCnt(), getTextColor(_player.getAdrenalineBonus()));
+		_adrenalineBtnGui.setPosition(tabBonusGuiPosX, tabBonusGuiPosY, -1f);
+		
+		_godBonusGui.setPosition(tabNrBonusGuiPosX, tabBonusGuiPosY + _adrenalineBtnGui.getHeight() + tabTopMargin, -1f);
+		_godBonusGui.build(getApplication().getAssets(), _player.getGoodTabsCnt(), getTextColor(_player.getGoodBonus()));
+		_godBtnGui.setPosition(tabBonusGuiPosX, tabBonusGuiPosY + _adrenalineBtnGui.getHeight() + tabTopMargin, -1f);
+		
+		_stopBonusGui.setPosition(tabNrBonusGuiPosX, tabBonusGuiPosY + (_adrenalineBtnGui.getHeight() + tabTopMargin)*2, -1f);
+		_stopBonusGui.build(getApplication().getAssets(), _player.getStopTabsCnt(), getTextColor(_player.getStopBonus()));
+		_stopBtnGui.setPosition(tabBonusGuiPosX, tabBonusGuiPosY + (_adrenalineBtnGui.getHeight() + tabTopMargin)*2, -1f);
+		
+		_jumpBonusGui.setPosition(tabNrBonusGuiPosX, tabBonusGuiPosY + (_adrenalineBtnGui.getHeight() + tabTopMargin)*3, -1f);
+		_jumpBonusGui.build(getApplication().getAssets(), _player.getJumpTabsCnt(), getTextColor(_player.getJumpBonus()));
+		_jumpBtnGui.setPosition(tabBonusGuiPosX, tabBonusGuiPosY + (_adrenalineBtnGui.getHeight() + tabTopMargin)*3, -1f);
+		
+		//Log.d("TIME", String.format("%.3f", _player.getAdrenalineBonus()) + " " + String.format("%.3f", _player.getGoodBonus()) + " " + String.format("%.3f", _player.getStopBonus()) + " " + String.format("%.3f", _player.getJumpBonus()));
+	}
+	
+	private float[] getTextColor(float bonusTime) {
+		return bonusTime > 0f ? usedColor : notUsedColor;
+	}
+	
+	
+	public static boolean touchHit(Touch t, ICamera cam, Sprite s)
+	{
+	       if(t == null || cam == null || s == null)
+	               return false;
+	       float[] loc = cam.convertLocationScreenToWorld(t.getX(), t.getY(), -1.0f);
+	       float nx = s.getPositionX() - s.getOffsetX();
+	       float ny = s.getPositionY() - s.getOffsetY();
+	       float px = nx + s.getWidth();
+	       float py = ny + s.getHeight();
+	       return loc[0] > nx && loc[0] < px && loc[1] > ny && loc[1] < py;
+	}
+	
+	public static boolean touchHit(Touch t, ICamera cam, Text s)
+	{
+	       if(t == null || cam == null || s == null)
+	               return false;
+	       float[] loc = cam.convertLocationScreenToWorld(t.getX(), t.getY(), -1.0f);
+	       float nx = s.getPositionX() - s.getOffsetX();
+	       float ny = s.getPositionY() - s.getOffsetY();
+	       float px = nx + s.getWidth();
+	       float py = ny + s.getHeight();
+	       return loc[0] > nx && loc[0] < px && loc[1] > ny && loc[1] < py;
 	}
 }
